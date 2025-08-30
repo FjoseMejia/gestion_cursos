@@ -1,0 +1,20 @@
+:root {
+    --color-primary: #3B82F6;
+    --color-primary-hover: #2563EB;
+    --color-background: #F1F5F9;
+    --color-white: #FFFFFF;
+    --color-text-main: #0F172A;
+    --color-muted: #94A3B8;
+    --color-border: #CBD5E1;
+    --color-shadow: rgba(0, 0, 0, 0.05);
+    --color-link: #3B82F6;
+
+
+    --font-main: 'Segoe UI', sans-serif;
+
+    --padding-base: 12px;
+    --padding-lg: 32px;
+    --radius: 8px;
+    --radius-lg: 16px;
+    --shadow: 0 4px 16px var(--color-shadow);
+}

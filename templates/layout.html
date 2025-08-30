@@ -1,0 +1,53 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title> {% block title %} Gestión Cursos {% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'fonts/fontawesome/css/all.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/variables.css' %}"/>
+  <link rel="stylesheet" href="{% static 'css/home/style.css' %}" />
+</head>
+<body class="body">
+  <aside class="sidebar">
+    <div class="sidebar__logo">
+      <img src="{% static './img/logo_sena.png' %}" alt="Logo Sena" class="sidebar__logo-img" />
+      <p class="sidebar__role">{{ grupo_nombre }}</p>
+    </div>
+    <nav class="sidebar__nav">
+      <div class="menu-category">Principal</div>
+      {% if grupo_nombre == "SuperAdmin" %}
+        <a href="#" class="sidebar__link sidebar__link--active"><i class="fas fa-home"></i>Inicio</a>
+        <a href="#" class="sidebar__link"><i class="fas fa-chart-bar"></i>Reportes</a>
+      {% endif %}
+      <div class="menu-category">Gestión</div>
+      {% if grupo_nombre == "SuperAdmin" %}
+        <a href="#" class="sidebar__link "><i class="fas fa-users"></i>Usuarios</a>
+        <a href="#" class="sidebar__link"><i class="fas fa-book"></i>Programas de formación</a>
+        <a href="#" class="sidebar__link"><i class="fas fa-tasks"></i>Solicitudes</a>
+      {% endif %}
+      <div class="menu-category">Configuración</div>
+      <a href="#" class="sidebar__link "><i class="fas fa-users"></i>Ajustes</a>
+      <a href="#" class="sidebar__link"><i class="fas fa-book"></i>Ayuda</a>
+      <a href="#" class="sidebar__link"><i class="fas fa-tasks"></i>Cerrar Sesión</a>
+    </nav>
+  </aside>
+
+  <div class="dashboard">
+    <header class="dashboard__header">
+      <h1 class="dashboard__welcome">Bienvenido, {{ request.user.first_name }} {{ request.user.last_name}}.</h1>
+      <div class="dashboard__actions">
+        <i class="fas fa-search dashboard__icon"></i>
+        <i class="fas fa-bell dashboard__icon"></i>
+        <i class="fas fa-user-circle dashboard__icon"></i>
+      </div>
+    </header>
+    {% block content %}
+
+    {% endblock %}
+
+  </div>
+</body>
+</html>
