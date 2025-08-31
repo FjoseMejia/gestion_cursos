@@ -18,17 +18,19 @@
     </div>
     <nav class="sidebar__nav">
       <div class="menu-category">Principal</div>
-      {% if grupo_nombre == "SuperAdmin" %}
-        <a href="#" class="sidebar__link sidebar__link--active"><i class="fas fa-home"></i>Inicio</a>
-        <a href="#" class="sidebar__link"><i class="fas fa-chart-bar"></i>Reportes</a>
-      {% endif %}
-      <div class="menu-category">Gestión</div>
-      {% if grupo_nombre == "SuperAdmin" %}
-        <a href="#" class="sidebar__link "><i class="fas fa-users"></i>Usuarios</a>
-        <a href="#" class="sidebar__link"><i class="fas fa-book"></i>Programas de formación</a>
-        <a href="#" class="sidebar__link"><i class="fas fa-tasks"></i>Solicitudes</a>
-      {% endif %}
-      <div class="menu-category">Configuración</div>
+      <a href="{% url 'home:index' %}" class="sidebar__link sidebar__link--active"><i class="fas fa-home"></i>Inicio</a>
+
+      {% for menu in sidebar_menus %}
+      <div class="menu-category">{{ menu.category }}</div>
+        {% for link in menu.links %}
+            <a href="{{ link.url }}" class="sidebar__link">
+                <i class="{{ link.icon }}"></i>{{ link.label }}
+            </a>
+        {% endfor %}
+      {% endfor %}
+
+      <div class="menu-category">Configuracion</div>
+
       <a href="#" class="sidebar__link "><i class="fas fa-users"></i>Ajustes</a>
       <a href="#" class="sidebar__link"><i class="fas fa-book"></i>Ayuda</a>
       <a href="#" class="sidebar__link"><i class="fas fa-tasks"></i>Cerrar Sesión</a>
