@@ -1,6 +1,6 @@
 # usuarios/forms.py
 from django import forms
-from .models import Perfil, TipoIdentificacion, Area
+from .models import Perfil
 from django.contrib.auth.forms import UserCreationForm
 
 class PerfilForm(UserCreationForm):
