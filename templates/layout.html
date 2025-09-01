@@ -62,5 +62,8 @@
     {% endblock %}
 
   </div>
+  {% if js_file %}
+  <script src="{% static js_file %}"> </script>
+  {% endif %}
 </body>
 </html>

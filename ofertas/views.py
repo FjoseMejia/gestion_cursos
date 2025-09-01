@@ -12,6 +12,7 @@ def index(request):
         'ofertas.html',
         {
             'grupo_nombre': grupo_nombre,
-            'css_file': f'css/oferta_{grupo_nombre.lower()}.css'
+            'css_file': f'css/oferta_{grupo_nombre.lower()}.css',
+            'js_file':  f'js/oferta_{grupo_nombre.lower()}.js'
         }
     )

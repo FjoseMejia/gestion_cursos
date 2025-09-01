@@ -16,18 +16,18 @@ class Area(models.Model):
 
 class Perfil(AbstractUser):
     # Campos adicionales obligatorios
-    telefono = models.BigIntegerField(null=False, blank=False)
+    telefono = models.BigIntegerField(null=True, blank=True)
     tipo_identificacion = models.ForeignKey(
         TipoIdentificacion,
         on_delete=models.PROTECT,
-        null=False,
-        blank=False
+        null=True,
+        blank=True
     )
-    numero_identificacion = models.CharField(max_length=50, null=False, blank=False)
+    numero_identificacion = models.CharField(max_length=50, null= True, blank= True)
     area = models.ForeignKey(
-        Area, on_delete= models.PROTECT, null=False, blank=False
+        Area, on_delete= models.PROTECT, null= True, blank= True
     )
-    es_verificado = models.BooleanField(default=False)
+    es_verificado = models.BooleanField(default= True)
 
     def __str__(self):
         return f"{self.username} - {self.email}"

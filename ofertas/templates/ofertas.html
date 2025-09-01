@@ -5,7 +5,7 @@
 <div id="requests-view" class="view-container">
     <div class="page-title">
         <h1>Gestiona tus solicitudes</h1>
-        <button class="btn btn-primary" id="add-user-btn">
+        <button class="btn btn-primary" id="new-request-btn">
         <i class="fas fa-plus"></i> Nueva Solicitud
         </button>
     </div>
@@ -37,5 +37,23 @@
         </tbody>
       </table>
     </div>
+</div>
+
+<div id="request-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title">Nueva Solicitud de Curso</h2>
+      <span class="close">&times;</span>
+    </div>
+    <div class="modal-body">
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" id="cancel-request">Cancelar</button>
+      <button class="btn btn-success" id="submit-request">
+        Enviar Solicitud
+      </button>
+    </div>
+  </div>
 </div>
 {% endblock %}
