@@ -1,32 +1,55 @@
 {% load static %}
 <!doctype html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{% static 'css/variables.css' %}">
-    <link rel="stylesheet" href="{% static 'registro/css/styles.css' %}">
-    <title>Formulario Registro</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registro de Usuario</title>
+  <link rel="stylesheet" href="{% static 'css/variables.css' %}" />
+  <link rel="stylesheet" href="{% static 'registro/css/styles.css' %}" />
+  <link rel="stylesheet" href="{% static 'fonts/fontawesome/css/all.min.css' %}" />
 </head>
-<body>
-    {% block content %}
+<body class="registro-page">
 
-    {% if messages %}
-      <ul class="messages">
-        {% for message in messages %}
-          <li class="{{ message.tags }}">{{ message }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
+  <main class="registro">
+    <div class="registro__card">
 
-    <form  class= "form" method="POST" action="{% url 'usuarios:register' %}">
+      {% if messages %}
+        <ul class="registro__messages">
+          {% for message in messages %}
+            <li class="registro__message {{ message.tags }}">
+              <i class="fas fa-info-circle"></i> {{ message }}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      <form class="form" method="POST" action="{% url 'usuarios:register' %}">
         {% csrf_token %}
-        {{ form }}
 
-        <input type="submit" value="Registrarse" class="form__input">
-    </form>
+        <h2 class="form__title">Crear Cuenta</h2>
 
-{% endblock %}
+        {% for field in form %}
+          <div class="form__group">
+            <label class="form__label" for="{{ field.id_for_label }}">{{ field.label }}:</label>
+            {{ field }}
+            
+            {% if field.help_text %}
+              <small class="form__help">{{ field.help_text|safe }}</small>
+            {% endif %}
+            
+            {% if field.errors %}
+              <div class="form__error">
+                {{ field.errors }}
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+
+        <button type="submit" class="form__button">Registrarse</button>
+      </form>
+    </div>
+  </main>
 
 </body>
 </html>
