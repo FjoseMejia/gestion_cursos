@@ -45,8 +45,22 @@
       <h2 class="modal-title">Nueva Solicitud de Curso</h2>
       <span class="close">&times;</span>
     </div>
+{{ form.modalidad_oferta  }}
+        {{ form.tipo_oferta }}
     <div class="modal-body">
+       <form  class= "form" method="POST" action="{% url 'ofertas:index' %}">
+        {% csrf_token %}
 
+
+
+        <label for="duracion-select">Duración (Horas):</label>
+        <select id="duracion-select" class="form__input">
+            <option value="">Seleccione duración</option>
+        </select>
+
+        <div id="programa-suggestions" class="suggestions"></div>
+
+      </form>
     </div>
     <div class="modal-footer">
       <button class="btn btn-danger" id="cancel-request">Cancelar</button>

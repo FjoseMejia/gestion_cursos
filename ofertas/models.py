@@ -10,14 +10,14 @@ class NivelFormacion(models.Model):
 
 
 class RedConocimientos(models.Model):
-    nombre = models.CharField(max_length=80)
+    nombre = models.CharField(max_length=255)
 
     def __str__(self):
         return self.nombre
 
 
 class LineaTecnologica(models.Model):
-    nombre = models.CharField(max_length=80)
+    nombre = models.CharField(max_length=255)
 
     def __str__(self):
         return self.nombre
@@ -187,7 +187,7 @@ class Oferta(models.Model):
         default= EntornoGeografico.URBANO
     )
 
-    # Relaciones con otras tablas
+
     programa= models.ForeignKey(ProgramaFormacion, on_delete=models.PROTECT)
     lugar= models.ForeignKey(Lugar, on_delete=models.PROTECT, null=True, blank=True)
     horario= models.ForeignKey(Horario, on_delete=models.PROTECT, null=True, blank=True)

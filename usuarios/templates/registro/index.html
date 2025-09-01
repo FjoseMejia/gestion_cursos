@@ -19,7 +19,7 @@
       </ul>
     {% endif %}
 
-    <form  class= "form" method="POST" action="{% url 'register' %}">
+    <form  class= "form" method="POST" action="{% url 'usuarios:register' %}">
         {% csrf_token %}
         {{ form }}
 
