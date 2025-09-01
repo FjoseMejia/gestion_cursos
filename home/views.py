@@ -10,19 +10,34 @@ role_home_map = {
     "Instructor": "home/home_instructor.html",
     "Invitado": "home/home_invitado.html",
 }
-
+app_name= 'home'
 # Create your views here.
 @login_required
 def home(request):
     user = request.user
     grupo = user.groups.first()
-    grupo_nombre = grupo.name
 
+    if grupo:
+        grupo_nombre = grupo.name
+    else:
+        grupo_nombre = 'Sin grupo'
 
 
     if user.is_superuser:
-        return render(request, 'home/home_admin.html', {'grupo_nombre': grupo_nombre})
+        return render(
+            request, 'home/home_admin.html',
+            {
+                'grupo_nombre': grupo_nombre,
+                'css_file': 'css/home_admin.css'
+            }
+        )
     else:
         template = role_home_map.get(grupo_nombre)
 
-    return render(request, template, {})
+    return render(
+        request,
+        template,
+        {
+            'css_file': f'css/home/{grupo_nombre.lower()}.css'
+        }
+    )

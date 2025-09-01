@@ -1,4 +1,5 @@
 :root {
+    --color-light: #ECF0F1;
     --color-primary: #3B82F6;
     --color-primary-hover: #2563EB;
     --color-background: #F1F5F9;
@@ -12,6 +13,7 @@
 
     --font-main: 'Segoe UI', sans-serif;
 
+    --header-height: 70px;
     --padding-base: 12px;
     --padding-lg: 32px;
     --radius: 8px;

@@ -17,7 +17,7 @@ def sidebar_groups(request):
                 "links": [
                     {"url": '#', "icon": "fas fa-users", "label": "Usuarios"},
                     {"url": "#", "icon": "fas fa-book", "label": "Programas de formación"},
-                    {"url": "#", "icon": "fas fa-tasks", "label": "Solicitudes"},
+                    {"url": "#", "icon": "fas fa-tasks", "label": "Ofertas"},
                 ],
             },
         ],
@@ -25,7 +25,7 @@ def sidebar_groups(request):
             {
                 "category": "Gestión",
                 "links": [
-                    {"url": reverse('ofertas:index'), "icon": "fas fa-tasks", "label": "Solicitudes"},
+                    {"url": reverse('ofertas:index'), "icon": "fas fa-tasks", "label": "Ofertas"},
                     {"url": "#", "icon": "fas fa-history", "label": "Histórico"},
                 ],
             },

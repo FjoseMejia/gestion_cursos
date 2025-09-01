@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.models import Group
 
 # Create your views here.
+
 def login(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -13,7 +14,7 @@ def login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             auth_login(request, user)
-            return redirect('home')
+            return redirect('home:index')
         else:
             error = "Usuario o contraseña incorrectos"
             return render(request, "login/index.html", {"error": error})
@@ -37,7 +38,7 @@ class Registro(View):
                 grupo, created = Group.objects.get_or_create(name='Invitado')
                 user.groups.add(grupo)
 
-            return redirect('login')
+            return redirect('usuarios:login')
         else:
 
             return render(request, "registro/index.html", {'form': form})

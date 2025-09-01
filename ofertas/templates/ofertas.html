@@ -1,1 +1,41 @@
 {% extends 'layout.html' %}
+{% block title %}Gestion de Solicitudes{% endblock %}
+
+{% block content %}
+<div id="requests-view" class="view-container">
+    <div class="page-title">
+        <h1>Gestiona tus solicitudes</h1>
+        <button class="btn btn-primary" id="add-user-btn">
+        <i class="fas fa-plus"></i> Nueva Solicitud
+        </button>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Todas las Solicitudes</div>
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input
+            type="text"
+            placeholder="Buscar solicitud..."
+            id="request-search"
+          />
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Curso Solicitado</th>
+            <th>Solicitante</th>
+            <th>Fecha</th>
+            <th>Programa</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="all-requests-table-body">
+          <!-- Content will be populated by JavaScript -->
+        </tbody>
+      </table>
+    </div>
+</div>
+{% endblock %}

@@ -7,4 +7,11 @@ def index(request):
     user= request.user
     grupo = user.groups.first()
     grupo_nombre = grupo.name if grupo else "Invitado"
-    return render(request, 'ofertas.html', {'grupo_nombre': grupo_nombre})
+    return render(
+        request,
+        'ofertas.html',
+        {
+            'grupo_nombre': grupo_nombre,
+            'css_file': f'css/oferta_{grupo_nombre.lower()}.css'
+        }
+    )

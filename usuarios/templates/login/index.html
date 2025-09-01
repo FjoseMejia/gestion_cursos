@@ -13,7 +13,7 @@
 <body class="body">
   <header class="topbar">
     <p class="topbar__text">
-      ¿No tienes cuenta? <a href="{% url 'register' %}" class="topbar__link">Regístrate</a>
+      ¿No tienes cuenta? <a href="{% url 'usuarios:register' %}" class="topbar__link">Regístrate</a>
     </p>
   </header>
 
@@ -24,7 +24,7 @@
       </div>
       <h2 class="login__title">Iniciar Sesión</h2>
 
-      <form action="{% url 'login' %}" method="POST" class="login__form">
+      <form action="{% url 'usuarios:login' %}" method="POST" class="login__form">
         {% csrf_token %}
         <div class="form-group">
           <i class="fas fa-envelope form-group__icon"></i>

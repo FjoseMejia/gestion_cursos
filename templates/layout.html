@@ -9,12 +9,15 @@
   <link rel="stylesheet" href="{% static 'fonts/fontawesome/css/all.min.css' %}" />
   <link rel="stylesheet" href="{% static 'css/variables.css' %}"/>
   <link rel="stylesheet" href="{% static 'css/home/style.css' %}" />
+  {% if css_file %}
+  <link rel="stylesheet" href="{% static css_file %}">
+  {% endif %}
 </head>
 <body class="body">
   <aside class="sidebar">
     <div class="sidebar__logo">
       <img src="{% static './img/logo_sena.png' %}" alt="Logo Sena" class="sidebar__logo-img" />
-      <p class="sidebar__role">{{ grupo_nombre }}</p>
+      <p class="sidebar__role"></p>
     </div>
     <nav class="sidebar__nav">
       <div class="menu-category">Principal</div>
@@ -38,14 +41,22 @@
   </aside>
 
   <div class="dashboard">
-    <header class="dashboard__header">
-      <h1 class="dashboard__welcome">Bienvenido, {{ request.user.first_name }} {{ request.user.last_name}}.</h1>
-      <div class="dashboard__actions">
-        <i class="fas fa-search dashboard__icon"></i>
-        <i class="fas fa-bell dashboard__icon"></i>
-        <i class="fas fa-user-circle dashboard__icon"></i>
-      </div>
-    </header>
+    <div class="header">
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Buscar" />
+        </div>
+        <div class="user-menu">
+          <div class="user-info">
+            <div class="user-name">{{ request.user.first_name }} {{ request.user.last_name}}</div>
+            <div class="user-role">{{ grupo_nombre }}</div>
+          </div>
+          <div class="user-avatar">
+            {{ request.user.first_name|slice:":1" }}{{ request.user.last_name|slice:":1" }}
+          </div>
+        </div>
+    </div>
+
     {% block content %}
 
     {% endblock %}

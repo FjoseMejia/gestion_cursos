@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from datetime import datetime, timedelta
+from datetime import datetime
 
 class NivelFormacion(models.Model):
     nombre = models.CharField(max_length=120)
@@ -142,11 +142,17 @@ class ProgramaEspecial(models.Model):
     nombre= models.CharField(max_length= 255)
 
 
-class Oferta(models.Model):
-    creado_en = models.DateTimeField(auto_now_add=True)
-    actualizado_en = models.DateTimeField(auto_now=True)
+class EmpresaSolicitante(models.Model):
+    nit= models.IntegerField()
+    nombre= models.CharField(max_length= 255)
+    subsector_economico= models.CharField(max_length= 255)
 
-    usuario = models.ForeignKey(
+
+class Oferta(models.Model):
+    creado_en= models.DateTimeField(auto_now_add=True)
+    actualizado_en= models.DateTimeField(auto_now=True)
+
+    usuario= models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT
     )
@@ -182,22 +188,21 @@ class Oferta(models.Model):
     )
 
     # Relaciones con otras tablas
-    programa = models.ForeignKey(ProgramaFormacion, on_delete=models.PROTECT)
-    lugar = models.ForeignKey(Lugar, on_delete=models.PROTECT, null=True, blank=True)
-    horario = models.ForeignKey(Horario, on_delete=models.PROTECT, null=True, blank=True)
-    estado = models.ForeignKey(Estado, on_delete=models.PROTECT)
+    programa= models.ForeignKey(ProgramaFormacion, on_delete=models.PROTECT)
+    lugar= models.ForeignKey(Lugar, on_delete=models.PROTECT, null=True, blank=True)
+    horario= models.ForeignKey(Horario, on_delete=models.PROTECT, null=True, blank=True)
+    estado= models.ForeignKey(Estado, on_delete=models.PROTECT)
 
-    cupo = models.IntegerField()
-    empresa_solicitante = models.CharField(max_length=255, null=True, blank=True)
-    subsector = models.CharField(max_length=255, null=True, blank=True)
-    programa_especial = models.ForeignKey(ProgramaEspecial, on_delete=models.PROTECT, null=True, blank=True)
-    convenio = models.CharField(max_length=255, null=True, blank=True)
-    ficha = models.CharField(max_length=255, null=True, blank=True)
-    codigo_de_solicitud = models.CharField(max_length=100, null=True, blank=True)
-
-    fecha_inicio = models.DateField()
-    fecha_terminacion = models.DateField()
-    fecha_de_inscripcion = models.DateField()
+    cupo= models.IntegerField()
+    empresa_solicitante= models.ForeignKey(EmpresaSolicitante, on_delete=models.PROTECT, null=True, blank=True)
+    subsector= models.CharField(max_length=255, null=True, blank=True)
+    programa_especial= models.ForeignKey(ProgramaEspecial, on_delete=models.PROTECT, null=True, blank=True)
+    convenio= models.CharField(max_length=255, null=True, blank=True)
+    ficha= models.CharField(max_length=255, null=True, blank=True)
+    codigo_de_solicitud= models.CharField(max_length=100, null=True, blank=True)
+    fecha_inicio= models.DateField()
+    fecha_terminacion= models.DateField()
+    fecha_de_inscripcion= models.DateField()
 
     def __str__(self):
         return f"Oferta {self.codigo_de_solicitud} - {self.tipo_oferta}"
