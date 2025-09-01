@@ -38,6 +38,6 @@ def home(request):
         request,
         template,
         {
-            'css_file': f'css/home/{grupo_nombre.lower()}.css'
+            'css_file': f'css/home_{grupo_nombre.lower()}.css'
         }
     )
