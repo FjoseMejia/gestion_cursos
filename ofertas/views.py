@@ -39,9 +39,29 @@ def programas_sugeridos(request):
     data = [{"id": p.id, "nombre": p.nombre, "duracion": p.duracion} for p in programas]
     return JsonResponse(data, safe=False)
 
-def solicitud(request):
-    return render(request, 'solicitud.html')
+@login_required
+def solicitudes(request):
+    # from .models import Solicitud
+    # total = Solicitud.objects.count()
+    # aprobadas = Solicitud.objects.filter(estado="aprobada").count()
+    # pendientes = Solicitud.objects.filter(estado="pendiente").count()
+    # rechazadas = Solicitud.objects.filter(estado="rechazada").count()
+    # ultimas = Solicitud.objects.order_by('-fecha')[:5]
+    return render(
+        request,
+        "solicitud.html",
+        # {
+        #     "total": total,
+        #     "aprobadas": aprobadas,
+        #     "pendientes": pendientes,
+        #     "rechazadas": rechazadas,
+        #     "ultimas": ultimas,
+        #     'css_file': 'css/solicitudes/funcionario.css'  # Si tienes un CSS específico, si no puedes quitar esta línea
+        # }
+    )
 
+
+@login_required
 def reportes(request):
-    return render(request, 'reportes.html', {'css_file': 'ofertas/css/reportes.css'})
+    return render(request, "home/reportes.html")
 
