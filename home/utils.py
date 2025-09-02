@@ -39,10 +39,9 @@ def sidebar_groups(request):
                     {"url": "#", "icon": "fas fa-book-open", "label": "Programas"},
                 ]
             }
-        ]
-
+        ],
     }
-
+            
     sidebar_menus = role_links.get(grupo_nombre, [])
 
     return {

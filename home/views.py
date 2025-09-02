@@ -13,6 +13,7 @@ role_home_map = {
 app_name= 'home'
 # Create your views here.
 @login_required
+
 def home(request):
     user = request.user
     grupo = user.groups.first()
@@ -62,3 +63,10 @@ def home_funcionario(request):
             'css_file': 'css/home/funcionario.css'  # Si tienes un CSS específico, si no puedes quitar esta línea
         }
     )
+@login_required
+def solicitudes(request):
+    return render(request, "home/solicitudes.html")
+
+@login_required
+def reportes(request):
+    return render(request, "home/reportes.html")

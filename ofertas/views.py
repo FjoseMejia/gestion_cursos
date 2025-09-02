@@ -8,7 +8,7 @@ from ofertas.forms import OfertaForm
 # Create your views here.
 @login_required
 def index(request):
-    user= request.user
+    user = request.user
     grupo = user.groups.first()
     grupo_nombre = grupo.name if grupo else "Invitado"
     form = OfertaForm()
@@ -19,7 +19,7 @@ def index(request):
         {
             'grupo_nombre': grupo_nombre,
             'css_file': f'css/oferta_{grupo_nombre.lower()}.css',
-            'js_file':  f'js/oferta_{grupo_nombre.lower()}.js',
+            'js_file': f'js/oferta_{grupo_nombre.lower()}.js',
             'form': form
         }
     )
@@ -44,3 +44,4 @@ def solicitud(request):
 
 def reportes(request):
     return render(request, 'reportes.html', {'css_file': 'ofertas/css/reportes.css'})
+

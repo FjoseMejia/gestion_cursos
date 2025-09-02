@@ -47,7 +47,7 @@ body {
 
 
 .login__card {
-    background: var(--color-white);
+    background: var(--color-text-main);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow);
     padding: var(--padding-lg);
@@ -268,4 +268,92 @@ body {
         max-width: 100%;
     }
 }
+/* Estilos para mensajes de error */
+.error-message {
+  background-color: #fee;
+  color: #c33;
+  padding: 12px;
+  border-radius: var(--radius);
+  border-left: 4px solid #c33;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+  font-size: 0.9rem;
+}
 
+/* Clase para elementos ocultos visualmente pero accesibles para lectores de pantalla */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Botón para mostrar/ocultar contraseña */
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--color-muted);
+  cursor: pointer;
+  padding: 5px;
+  font-size: 0.9rem;
+}
+
+.password-toggle:hover {
+  color: var(--color-primary);
+}
+
+/* Estados de validación */
+.form-group__input:invalid:not(:focus):not(:placeholder-shown) {
+  border-color: #e74c3c;
+}
+
+.form-group__input:valid:not(:focus):not(:placeholder-shown) {
+  border-color: #2ecc71;
+}
+
+/* Estilos para el botón de carga */
+.button-spinner {
+  display: flex;
+  justify-content: center;
+}
+
+/* Mejoras responsive para móviles */
+@media (max-width: 480px) {
+  .login__card {
+    padding: 1.5rem;
+    margin: 0 15px;
+  }
+  
+  .topbar__text {
+    font-size: 0.8rem;
+    text-align: center;
+    padding: 10px;
+  }
+}
+
+/* Pequeña animación para la tarjeta de login */
+.login__card {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
