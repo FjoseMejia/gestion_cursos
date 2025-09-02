@@ -38,3 +38,9 @@ def programas_sugeridos(request):
 
     data = [{"id": p.id, "nombre": p.nombre, "duracion": p.duracion} for p in programas]
     return JsonResponse(data, safe=False)
+
+def solicitud(request):
+    return render(request, 'solicitud.html')
+
+def reportes(request):
+    return render(request, 'reportes.html', {'css_file': 'ofertas/css/reportes.css'})

@@ -1,0 +1,68 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="layout">
+    <main class="main-container">
+
+        <!-- Título -->
+        <div class="page-title">
+            <h1>📊 Reportes Generales</h1>
+        </div>
+
+        <!-- Tarjetas resumen -->
+        <div class="stats">
+            <div class="card">
+                <h2>120</h2>
+                <p>Total Solicitudes</p>
+            </div>
+            <div class="card">
+                <h2>350</h2>
+                <p>Asistencias Registradas</p>
+            </div>
+            <div class="card">
+                <h2>45</h2>
+                <p>Excusas Subidas</p>
+            </div>
+            <div class="card">
+                <h2>30</h2>
+                <p>Aseos Cumplidos</p>
+            </div>
+        </div>
+
+        <!-- Tabla de reportes -->
+        <div class="table-container">
+            <h3>Últimos Reportes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Usuario</th>
+                        <th>Estado</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Solicitud</td>
+                        <td>Juan Pérez</td>
+                        <td><span class="status status-aprobada">Aprobada</span></td>
+                        <td>01/09/2025</td>
+                    </tr>
+                    <tr>
+                        <td>Excusa</td>
+                        <td>María López</td>
+                        <td><span class="status status-rechazada">Rechazada</span></td>
+                        <td>30/08/2025</td>
+                    </tr>
+                    <tr>
+                        <td>Aseo</td>
+                        <td>Carlos Gómez</td>
+                        <td><span class="status status-pendiente">Pendiente</span></td>
+                        <td>28/08/2025</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+{% endblock %}

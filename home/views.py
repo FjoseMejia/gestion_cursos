@@ -41,3 +41,24 @@ def home(request):
             'css_file': f'css/home_{grupo_nombre.lower()}.css'
         }
     )
+
+@login_required
+def home_funcionario(request):
+    from .models import Solicitud
+    total = Solicitud.objects.count()
+    aprobadas = Solicitud.objects.filter(estado="aprobada").count()
+    pendientes = Solicitud.objects.filter(estado="pendiente").count()
+    rechazadas = Solicitud.objects.filter(estado="rechazada").count()
+    ultimas = Solicitud.objects.order_by('-fecha')[:5]
+    return render(
+        request,
+        "home/home_funcionario.html",
+        {
+            "total": total,
+            "aprobadas": aprobadas,
+            "pendientes": pendientes,
+            "rechazadas": rechazadas,
+            "ultimas": ultimas,
+            'css_file': 'css/home/funcionario.css'  # Si tienes un CSS específico, si no puedes quitar esta línea
+        }
+    )

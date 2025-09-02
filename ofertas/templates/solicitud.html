@@ -1,0 +1,61 @@
+
+{% extends 'layout.html' %}
+
+
+{% block content %}
+<div class="layout">
+    <!-- Contenido principal -->
+    <main class="main-container">
+
+        <!-- Resumen de solicitudes -->
+        <div class="stats">
+            <div class="card">
+                <h2>25</h2>
+                <p>Solicitudes pendientes</p>
+            </div>
+            <div class="card">
+                <h2>10</h2>
+                <p>Solicitudes aprobadas</p>
+            </div>
+            <div class="card">
+                <h2>5</h2>
+                <p>Solicitudes rechazadas</p>
+            </div>
+            <div class="card">
+                <h2>40</h2>
+                <p>Total gestionadas</p>
+            </div>
+        </div>
+
+        <!-- Tabla de solicitudes -->
+        <div class="table-container">
+            <h3>Últimas Solicitudes Recibidas</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Solicitud</th>
+                        <th>Instructor</th>
+                        <th>Estado</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Curso de Excel Avanzado</td>
+                        <td>Juan Pérez</td>
+                        <td><span class="status status-pendiente">Pendiente</span></td>
+                        <td>01/09/2025</td>
+                        
+                    </tr>
+                    <tr>
+                        <td>Gestión del tiempo</td>
+                        <td>María López</td>
+                        <td><span class="status status-aprobada">Aprobada</span></td>
+                        <td>30/08/2025</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+{% endblock %}
