@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from datetime import datetime
+from datetime import datetime 
 
 class NivelFormacion(models.Model):
     nombre = models.CharField(max_length=120)

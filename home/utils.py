@@ -30,9 +30,35 @@ def sidebar_groups(request):
                 ],
             },
         ],
-        # Agrega los demás roles aquí...
+        "Funcionario": [
+            {
+                "category": "Principal",
+                "links": [
+                    {
+                        "url": reverse('ofertas:fichas'),  # debes crear esta vista si no existe
+                        "icon": "fas fa-chart-bar",
+                        "label": "Reportes ",
+                    },
+                ],
+            },
+            {
+                "category": "Gestión",
+                "links": [
+                    {
+                        "url": reverse('ofertas:solicitudes_list'),  # Cursos: listar, CRUD sin eliminar
+                        "icon": "fas fa-book",
+                        "label": "Cursos",
+                    },
+                    {
+                        "url": reverse('ofertas:solicitudes_list'),  # Visualización de documentos
+                        "icon": "fas fa-file-excel",
+                        "label": "Solicitudes",
+                    },
+                ],
+            },
+        ],
     }
-
+            
     sidebar_menus = role_links.get(grupo_nombre, [])
 
     return {

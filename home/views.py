@@ -13,6 +13,7 @@ role_home_map = {
 app_name= 'home'
 # Create your views here.
 @login_required
+
 def home(request):
     user = request.user
     grupo = user.groups.first()

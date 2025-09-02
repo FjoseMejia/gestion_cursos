@@ -38,3 +38,9 @@ def programas_sugeridos(request):
 
     data = [{"id": p.id, "nombre": p.nombre, "duracion": p.duracion} for p in programas]
     return JsonResponse(data, safe=False)
+
+def reporte_fichas_view(request):
+    # Aquí puedes agregar lógica para obtener datos de fichas si quieres
+    return render(request, 'reporte_fichas.html')
+def solicitudes_list_view(request):
+    return render(request, 'solicitudes_list.html')  # Ajusta si el template está en otro lugar
