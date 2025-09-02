@@ -1,5 +1,5 @@
 {% extends 'layout.html' %}
-{% block title %}Gestion de Solicitudes{% endblock %}
+{% block title %}Gestion de Ofertas{% endblock %}
 
 {% block content %}
 <div id="requests-view" class="view-container">
@@ -42,25 +42,36 @@
 <div id="request-modal" class="modal">
   <div class="modal-content">
     <div class="modal-header">
-      <h2 class="modal-title">Nueva Solicitud de Curso</h2>
+      <h2 class="modal-title">Nueva Oferta</h2>
       <span class="close">&times;</span>
     </div>
-{{ form.modalidad_oferta  }}
-        {{ form.tipo_oferta }}
+
     <div class="modal-body">
-       <form  class= "form" method="POST" action="{% url 'ofertas:index' %}">
-        {% csrf_token %}
+       <form class="form" method="POST" action="{% url 'ofertas:index' %}">
 
+            {% csrf_token %}
+            <p>Datos de Oferta</p>
+            <hr>
 
+            {{ form.modalidad_oferta  }}
+            {{ form.tipo_oferta }}
+            {{ form.entorno_geografico }}
+            {{ form.programa_especial }}
+            {{ form.fecha_de_inscripcion }}
+            {{ form.fecha_terminacion }}
 
-        <label for="duracion-select">Duración (Horas):</label>
-        <select id="duracion-select" class="form__input">
-            <option value="">Seleccione duración</option>
-        </select>
+            <p>Datos Empresa</p>
+            <hr>
+            {{ form.empresa_nit }}
+            {{ form.empresa_nombre }}
+            {{ form.empresa_subsector }}
 
-        <div id="programa-suggestions" class="suggestions"></div>
+            <p>Datos del programa de formacion</p>
+            <hr>
+            {{ form.programa }}
 
-      </form>
+       </form>
+
     </div>
     <div class="modal-footer">
       <button class="btn btn-danger" id="cancel-request">Cancelar</button>

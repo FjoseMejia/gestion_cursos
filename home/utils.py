@@ -30,7 +30,7 @@ def sidebar_groups(request):
                 ],
             },
         ],
-        # Agrega los demás roles aquí...
+
     }
 
     sidebar_menus = role_links.get(grupo_nombre, [])

@@ -3,7 +3,7 @@ from .models import Oferta, Lugar, Horario, EmpresaSolicitante
 
 
 class OfertaForm(forms.ModelForm):
-    # Campos manuales
+
     lugar = forms.CharField(
         required=False,
         widget=forms.TextInput(attrs={'class': 'form__input', 'placeholder': 'Lugar'})
@@ -14,7 +14,6 @@ class OfertaForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class': 'form__input', 'placeholder': 'Horario'})
     )
 
-    # Campos adicionales para empresa solicitante
     empresa_nombre = forms.CharField(
         required=False,
         widget=forms.TextInput(attrs={'class': 'form__input', 'placeholder': 'Nombre de la empresa'})
@@ -33,7 +32,7 @@ class OfertaForm(forms.ModelForm):
         fields = [
             'modalidad_oferta', 'tipo_oferta', 'entorno_geografico',
             'programa', 'cupo', 'empresa_solicitante',
-            'subsector', 'programa_especial', 'convenio', 'ficha',
+            'programa_especial',
             'fecha_inicio', 'fecha_de_inscripcion', 'fecha_terminacion',
         ]
 
@@ -43,13 +42,11 @@ class OfertaForm(forms.ModelForm):
             'entorno_geografico': forms.Select(),
             'programa': forms.TextInput(attrs={'id': 'programa-input', 'class': 'form__input', 'placeholder': 'Escribe el curso...'}),
             'cupo': forms.NumberInput(attrs={'class': 'form__input', 'placeholder': 'Cupo', 'min': 1}),
-            'subsector': forms.TextInput(attrs={'class': 'form__input', 'placeholder': 'Subsector'}),
             'programa_especial': forms.Select(),
-            'convenio': forms.TextInput(attrs={'class': 'form__input', 'placeholder': 'Convenio'}),
             'ficha': forms.TextInput(attrs={'class': 'form__input', 'placeholder': 'Ficha'}),
             'fecha_inicio': forms.DateInput(attrs={'type': 'date', 'class': 'form__input'}),
             'fecha_de_inscripcion': forms.DateInput(attrs={'type': 'date', 'class': 'form__input'}),
-            'fecha_terminacion': forms.DateInput(attrs={'type': 'date', 'class': 'form__input'}),
+
         }
 
     def clean_lugar(self):
@@ -68,7 +65,7 @@ class OfertaForm(forms.ModelForm):
                 jornada_id=1,
                 modalidad_id=1
             )
-            # ⚠️ Igual que con Lugar, necesitas decidir cómo quieres manejar la creación de Horarios
+
             return horario_obj
         return None
 
