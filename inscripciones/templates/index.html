@@ -1,1 +1,29 @@
-{% extends 'home/layout.html' %}
+{% extends 'layout.html' %}
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Mi sitio{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'style1.css' %}">
+</head>
+{% block content %}
+<div class="container">
+    <h1>Inscripción de Aspirantes</h1>
+    <p>Por favor, completa los siguientes datos para inscribirte.</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <br>
+        <button type="submit">Enviar Inscripción</button>
+    </form>
+
+    <hr>
+
+    <h3>Descargar datos a Excel</h3>
+    <p>Haz clic en el siguiente enlace para descargar todas las inscripciones en un archivo de Excel.</p>
+    <a href="{% url 'exportar_excel' %}">Descargar Excel</a>
+</div>
+{% endblock %}
