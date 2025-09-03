@@ -52,13 +52,18 @@
             {% csrf_token %}
             <p>Datos de Oferta</p>
             <hr>
-
             {{ form.modalidad_oferta  }}
             {{ form.tipo_oferta }}
             {{ form.entorno_geografico }}
+            <label>Programa especial</label>
             {{ form.programa_especial }}
+
+            <label>Fecha de Inicio</label>
+            {{ form.fecha_inicio }}
+
+            <label>Fecha de Inicio</label>
             {{ form.fecha_de_inscripcion }}
-            {{ form.fecha_terminacion }}
+
 
             <p>Datos Empresa</p>
             <hr>
@@ -66,12 +71,20 @@
             {{ form.empresa_nombre }}
             {{ form.empresa_subsector }}
 
-            <p>Datos del programa de formacion</p>
+            <p>Programa de formacion</p>
             <hr>
             {{ form.programa }}
 
        </form>
+        <h1>Ejemplo fetch → /api/books/</h1>
 
+          <div>
+            <input id="q" placeholder="Buscar por título (opcional)" />
+            <button id="btn">Buscar</button>
+            <span id="status" class="muted"></span>
+          </div>
+
+          <ul id="list"></ul>
     </div>
     <div class="modal-footer">
       <button class="btn btn-danger" id="cancel-request">Cancelar</button>

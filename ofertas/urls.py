@@ -5,5 +5,5 @@ app_name = 'ofertas'
 
 urlpatterns = [
     path("", views.index, name="index"),
-
+    path("programas/", views.programas_list, name="books_list"),
 ]
