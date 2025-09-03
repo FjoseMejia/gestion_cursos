@@ -39,10 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.forms',
+    'django_extensions',
     'usuarios.apps.UsuariosConfig',
     'home.apps.HomeConfig',
     'ofertas.apps.OfertasConfig',
-    'inscripciones.apps.InscripcionesConfig'
+    'inscripciones.apps.InscripcionesConfig',
 ]
 
 MIDDLEWARE = [
@@ -136,5 +137,5 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'usuarios.Perfil'
-
-LOGIN_URL = '/'
+LOGIN_URL='/usuarios/' #vista del login
+LOGIN_REDIRECT_URL = '/' # despues del login,ir al dashboard
