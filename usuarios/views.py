@@ -4,6 +4,7 @@ from usuarios.forms import PerfilForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.models import Group
+from usuarios.models import Perfil
 
 # Create your views here.
 
