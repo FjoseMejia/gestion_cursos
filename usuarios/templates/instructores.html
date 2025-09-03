@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <h1>Gestión de Instructores</h1>
+    <p>Rol del usuario: {{ grupo_nombre }}</p>
+    <p>Total de perfiles: {{ total_instructores }}</p>
+
+    <h2>Perfiles</h2>
+    <ul>
+    {% for perfil in perfiles %}
+        <li>
+            {{ perfil.username }} - {{ perfil.email }}
+            ({{ perfil.groups.all|join:", " }})
+            {% if perfil.telefono %} - Tel: {{ perfil.telefono }}{% endif %}
+            {% if perfil.tipo_identificacion %} - ID: {{ perfil.tipo_identificacion }} {{ perfil.numero_identificacion }}{% endif %}
+            {% if perfil.area %} - Área: {{ perfil.area }}{% endif %}
+            {% if perfil.es_verificado %} - Verificado {% else %} - No verificado {% endif %}
+        </li>
+    {% empty %}
+        <li>No hay perfiles disponibles.</li>
+    {% endfor %}
+    </ul>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="/static/{{ css_file }}">
+{% endblock %}
+
+{% block js %}
+    <script src="/static/{{ js_file }}"></script>
+{% endblock %}

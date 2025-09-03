@@ -40,6 +40,15 @@ def sidebar_groups(request):
                 ]
             }
         ],
+        "Coordinador": [
+            {
+                "category": "Gestión",
+                "links": [
+                    {"url": "#", "icon": "fas fa-inbox", "label": "Solicitudes"},
+                    {"url":  reverse('usuarios:instructores'), "icon": "fas fa-chalkboard-teacher", "label": "Instructores"},
+                ]
+            }
+        ],
     }
             
     sidebar_menus = role_links.get(grupo_nombre, [])
