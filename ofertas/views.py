@@ -5,6 +5,9 @@ from .models import ProgramaFormacion
 from ofertas.forms import OfertaForm
 from django.db.models import Count
 from django.shortcuts import redirect
+from openpyxl import Workbook
+import io
+from.models import  RedConocimientos
 
 
 # Create your views here.
@@ -90,3 +93,49 @@ def crear_reporte(request):
         for _ in range(int(cantidad)):
             ProgramaFormacion.objects.create(tipo_programa=tipo)
     return redirect('ofertas:reportes')
+    
+def exportar_a_excel(request):
+    """Genera y descarga un archivo de Excel con los datos de todas las inscripciones."""
+    datos = RedConocimientos.objects.all().order_by('id')
+
+    output = io.BytesIO()
+    workbook = Workbook()
+    sheet = workbook.active
+
+    # Define los encabezados de las columnas
+    sheet['A1'] = 'id'
+    sheet['B1'] = 'nombre'
+    # sheet['C1'] = 'instructor'
+    # sheet['D1'] = 'modalidad '
+    # sheet['E1'] = 'Código de la Ficha'
+    # sheet['F1'] = 'fehca de inicio'
+    # sheet['G1'] = 'fecha de fin'
+ 
+
+    # Ancho de las columnas para que se vean bien
+    sheet.column_dimensions['A'].width = 25
+    sheet.column_dimensions['B'].width = 25
+    # sheet.column_dimensions['C'].width = 25
+    # sheet.column_dimensions['D'].width = 20
+    # sheet.column_dimensions['E'].width = 30
+    # sheet.column_dimensions['F'].width = 20
+    # sheet.column_dimensions['G'].width = 20
+
+    # Llena los datos en las filas correspondientes
+    row_num = 2
+    for RedConocimientos in datos:
+        sheet[f'A{row_num}'] = RedConocimientos.id
+        sheet[f'B{row_num}'] = RedConocimientos.nombre
+        # sheet[f'E{row_num}'] = ModalidadOferta.tipo_poblacion_aspirante
+        row_num += 1
+
+    workbook.save(output)
+    output.seek(0)
+
+    response = HttpResponse(
+        output.getvalue(),
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename="inscripciones.xlsx"'
+
+    return response
