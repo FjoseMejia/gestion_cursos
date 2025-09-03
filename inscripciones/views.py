@@ -61,3 +61,40 @@ def exportar_a_excel(request):
     response['Content-Disposition'] = 'attachment; filename="inscripciones.xlsx"'
     
     return response
+
+def exportar_datos_personales(request):
+    """Genera y descarga un archivo de Excel con nombre, apellido y celular."""
+    inscripciones = Inscripcion.objects.all().order_by('id')
+
+    output = io.BytesIO()
+    workbook = Workbook()
+    sheet = workbook.active
+
+    # Encabezados
+    sheet['A1'] = 'Nombre'
+    sheet['B1'] = 'Apellido'
+    sheet['C1'] = 'Celular'
+
+    # Ancho de columnas
+    sheet.column_dimensions['A'].width = 25
+    sheet.column_dimensions['B'].width = 25
+    sheet.column_dimensions['C'].width = 20
+
+    # Datos
+    row_num = 2
+    for inscripcion in inscripciones:
+        sheet[f'A{row_num}'] = inscripcion.nombre
+        sheet[f'B{row_num}'] = inscripcion.apellido
+        sheet[f'C{row_num}'] = inscripcion.celular
+        row_num += 1
+
+    workbook.save(output)
+    output.seek(0)
+
+    response = HttpResponse(
+        output.getvalue(),
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename="datos_personales.xlsx"'
+
+    return response
