@@ -30,9 +30,27 @@ def sidebar_groups(request):
                 ],
             },
         ],
-        # Agrega los demás roles aquí...
+        "Funcionario": [
+            {
+                "category": "Gestión",
+                "links": [
+                    {"url": reverse('ofertas:solicitud'), "icon": "fas fa-inbox", "label": "Solicitudes"},
+                    {"url": reverse('ofertas:reportes'), "icon": "fas fa-chart-line", "label": "Reportes"},
+                    {"url": "#", "icon": "fas fa-book-open", "label": "Programas"},
+                ]
+            }
+        ],
+        "Coordinador": [
+            {
+                "category": "Gestión",
+                "links": [
+                    {"url": "#", "icon": "fas fa-inbox", "label": "Solicitudes"},
+                    {"url":  reverse('usuarios:instructores'), "icon": "fas fa-chalkboard-teacher", "label": "Instructores"},
+                ]
+            }
+        ],
     }
-
+            
     sidebar_menus = role_links.get(grupo_nombre, [])
 
     return {

@@ -1,0 +1,94 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block content %}
+<div class="report">
+    <div class="report-header">
+        <h2>📊 Reporte de Fichas</h2>
+        <!-- Botón para abrir el modal -->
+        <button id="btnAgregar" class="btn-agregar">➕ Agregar Reporte</button>
+    </div>
+
+    <!-- Totales -->
+    <div class="totals">
+        <div class="total-card">
+            <h4>Total de Fichas</h4>
+            <p>{{ total }}</p>
+        </div>
+        <div class="total-card">
+            <h4>Fichas Campesena</h4>
+            <p>{{ campesena }}</p>
+        </div>
+        <div class="total-card">
+            <h4>Fichas Regulares</h4>
+            <p>{{ regular }}</p>
+        </div>
+    </div>
+
+    <!-- Detalle por tipo de programa -->
+    <h3>📌 Detalle por tipo de programa</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Modalidad</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Total CAMPESENA</td>
+                    <td>{{ resumen_totales.total_campesina }}</td>
+                </tr>
+                <tr>
+                    <td>Total REGULAR</td>
+                    <td>{{ resumen_totales.total_regular }}</td>
+                </tr>
+                <tr>
+                    <td>Total General</td>
+                    <td>{{ resumen_totales.total }}</td>
+                </tr>
+            </tbody>
+    </table>
+
+</div>
+
+<!-- Modal -->
+<div id="modalAgregar" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h3>Generar Reporte</h3>
+    <form method="POST" action="{% url 'ofertas:crear_reporte' %}">
+        {% csrf_token %}
+        <label for="tipo_programa">Tipo de Programa:</label>
+        <input type="text" name="tipo_programa" id="tipo_programa" required>
+
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" name="cantidad" id="cantidad" required>
+
+        <button type="submit" class="btn-agregar">Guardar</button>
+    </form>
+  </div>
+</div>
+
+<!-- JS para abrir/cerrar modal -->
+<script>
+    const modal = document.getElementById("modalAgregar");
+    const btn = document.getElementById("btnAgregar");
+    const span = document.getElementsByClassName("close")[0];
+
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+
+{% endblock %}
