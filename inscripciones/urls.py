@@ -14,20 +14,14 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-# inscripciones/urls.py
+
 from django.contrib import admin
 from django.urls import path
 
-# Importa tus vistas para poder referenciarlas
+
 from . import views 
 
 urlpatterns = [
-    # Todos los patrones de URL deben estar en una sola lista
-    path('', views.inscripcion_formulario, name='index'),
     path('admin/', admin.site.urls),
-    path('exportar-excel/', views.exportar_a_excel, name='exportar_excel'),
-    path('exportar-personales/', views.exportar_datos_personales, name='exportar_personales'),
 
-    # La URL para exportar el archivo de Excel
-    #path('exportar-excel/', views.exportar_a_excel, name='exportar_excel'),
 ]
