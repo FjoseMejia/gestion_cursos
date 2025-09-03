@@ -1,68 +1,91 @@
 {% extends 'layout.html' %}
+{% load static %}
 
 {% block content %}
-<div class="layout">
-    <main class="main-container">
+<div class="report">
+    <div class="report-header">
+        <h2>📊 Reporte de Fichas</h2>
+        <!-- Botón para abrir el modal -->
+        <button id="btnAgregar" class="btn-agregar">➕ Agregar Reporte</button>
+    </div>
 
-        <!-- Título -->
-        <div class="page-title">
-            <h1>📊 Reportes Generales</h1>
+    <!-- Totales -->
+    <div class="totals">
+        <div class="total-card">
+            <h4>Total de Fichas</h4>
+            <p>{{ total }}</p>
         </div>
+        <div class="total-card">
+            <h4>Fichas Campesena</h4>
+            <p>{{ campesena }}</p>
+        </div>
+        <div class="total-card">
+            <h4>Fichas Regulares</h4>
+            <p>{{ regular }}</p>
+        </div>
+    </div>
 
-        <!-- Tarjetas resumen -->
-        <div class="stats">
-            <div class="card">
-                <h2>120</h2>
-                <p>Total Solicitudes</p>
-            </div>
-            <div class="card">
-                <h2>350</h2>
-                <p>Asistencias Registradas</p>
-            </div>
-            <div class="card">
-                <h2>45</h2>
-                <p>Excusas Subidas</p>
-            </div>
-            <div class="card">
-                <h2>30</h2>
-                <p>Aseos Cumplidos</p>
-            </div>
-        </div>
-
-        <!-- Tabla de reportes -->
-        <div class="table-container">
-            <h3>Últimos Reportes</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Tipo</th>
-                        <th>Usuario</th>
-                        <th>Estado</th>
-                        <th>Fecha</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Solicitud</td>
-                        <td>Juan Pérez</td>
-                        <td><span class="status status-aprobada">Aprobada</span></td>
-                        <td>01/09/2025</td>
-                    </tr>
-                    <tr>
-                        <td>Excusa</td>
-                        <td>María López</td>
-                        <td><span class="status status-rechazada">Rechazada</span></td>
-                        <td>30/08/2025</td>
-                    </tr>
-                    <tr>
-                        <td>Aseo</td>
-                        <td>Carlos Gómez</td>
-                        <td><span class="status status-pendiente">Pendiente</span></td>
-                        <td>28/08/2025</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </main>
+    <!-- Detalle por tipo de programa -->
+    <h3>📌 Detalle por tipo de programa</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Tipo de Programa</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ficha in fichas_por_tipo %}
+            <tr>
+                <td>{{ ficha.tipo_programa|upper }}</td>
+                <td>{{ ficha.total }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2">No hay fichas registradas</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
+
+<!-- Modal -->
+<div id="modalAgregar" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h3>Agregar Nuevo Reporte</h3>
+    <form method="POST" action="{% url 'ofertas:crear_reporte' %}">
+        {% csrf_token %}
+        <label for="tipo_programa">Tipo de Programa:</label>
+        <input type="text" name="tipo_programa" id="tipo_programa" required>
+
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" name="cantidad" id="cantidad" required>
+
+        <button type="submit" class="btn-agregar">Guardar</button>
+    </form>
+  </div>
+</div>
+
+<!-- JS para abrir/cerrar modal -->
+<script>
+    const modal = document.getElementById("modalAgregar");
+    const btn = document.getElementById("btnAgregar");
+    const span = document.getElementsByClassName("close")[0];
+
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+
 {% endblock %}

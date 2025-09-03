@@ -3,6 +3,8 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from .models import ProgramaFormacion
 from ofertas.forms import OfertaForm
+from django.db.models import Count
+from django.shortcuts import redirect
 
 
 # Create your views here.
@@ -63,5 +65,28 @@ def solicitudes(request):
 
 @login_required
 def reportes(request):
-    return render(request, "home/reportes.html")
+    # Contar fichas por tipo (campesena, regular, etc.)
+    fichas_por_tipo = ProgramaFormacion.objects.values('tipo_programa').annotate(total=Count('id'))
 
+    # Si quieres además totales separados
+    campesena = ProgramaFormacion.objects.filter(tipo_programa="campesena").count()
+    regular = ProgramaFormacion.objects.filter(tipo_programa="regular").count()
+    total = ProgramaFormacion.objects.count()
+
+
+    return render(request, 'reportes.html', { 'css_file': 'css/reportes.css',
+        'fichas_por_tipo': fichas_por_tipo,
+        'campesena': campesena,
+        'regular': regular,
+        'total': total,
+    })
+
+@login_required
+def crear_reporte(request):
+    if request.method == "POST":
+        tipo = request.POST.get("tipo_programa")
+        cantidad = request.POST.get("cantidad")
+        # Guardar el reporte en la tabla ProgramaFormacion
+        for _ in range(int(cantidad)):
+            ProgramaFormacion.objects.create(tipo_programa=tipo)
+    return redirect('ofertas:reportes')
