@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'usuarios.apps.UsuariosConfig',
     'home.apps.HomeConfig',
     'ofertas.apps.OfertasConfig',
-    'inscripciones.apps.InscripcionesConfig'
+    'inscripciones.apps.InscripcionesConfig',
 ]
 
 MIDDLEWARE = [

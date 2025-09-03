@@ -4,6 +4,7 @@ from usuarios.forms import PerfilForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.models import Group
+from usuarios.models import Perfil
 
 # Create your views here.
 
@@ -45,61 +46,20 @@ class Registro(View):
 
 def recovery_password(request, email):
     return render(request, 'recovery_password.html', {'email': email})
-
 # Vista para la gestión de instructores -
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from usuarios.models import Perfil
-from django.db.models import Q
+# Vista para la gestión de instructores -
+def list_user_by_area(request):
+    area_user= request.user.area.nombre
+    instructores_by_area = Perfil.objects.filter(area__nombre=area_user).values(
+        'username', 'first_name', 'email'
+    )
 
-@login_required
-def instructores(request):
-    usuario_actual = request.user
-    
-    # Determinar el queryset según el rol del usuario
-    if usuario_actual.is_superuser or usuario_actual.groups.filter(name__in=['Admin', 'Administrador']).exists():
-        # Admin o superadmin ve todos los roles
-        perfiles = Perfil.objects.all()
-        instructores = Perfil.objects.filter(groups__name='Instructor')
-        coordinadores = Perfil.objects.filter(groups__name='Coordinador')
-        funcionarios = Perfil.objects.filter(groups__name='Funcionario')
-    
-    elif usuario_actual.groups.filter(name='Coordinador').exists():
-        # Coordinador ve solo instructores
-        perfiles = Perfil.objects.filter(groups__name='Instructor')
-        instructores = perfiles
-        coordinadores = Perfil.objects.none()
-        funcionarios = Perfil.objects.none()
-    
-    elif usuario_actual.groups.filter(name='Funcionario').exists():
-        # Funcionario ve solo instructores
-        perfiles = Perfil.objects.filter(groups__name='Instructor')
-        instructores = perfiles
-        coordinadores = Perfil.objects.none()
-        funcionarios = Perfil.objects.none()
-    
-    else:
-        # Para otros roles (Instructor u otros), solo se ve a sí mismo
-        perfiles = Perfil.objects.filter(id=usuario_actual.id)
-        instructores = perfiles
-        coordinadores = Perfil.objects.none()
-        funcionarios = Perfil.objects.none()
-    
-    # Obtener el nombre del grupo principal del usuario
-    grupo_principal = "Invitado"
-    if usuario_actual.groups.exists():
-        grupo_principal = usuario_actual.groups.first().name
-    
-    # Contexto para el template
-    context = {
-        'grupo_nombre': grupo_principal,
-        'perfiles': perfiles.select_related('tipo_identificacion', 'area').prefetch_related('groups'),
-        'instructores': instructores.select_related('tipo_identificacion', 'area').prefetch_related('groups'),
-        'coordinadores': coordinadores.select_related('tipo_identificacion', 'area').prefetch_related('groups'),
-        'funcionarios': funcionarios.select_related('tipo_identificacion', 'area').prefetch_related('groups'),
-        'total_instructores': perfiles.count(),
-        'css_file': 'instructores/css/instructores.css',
-        'js_file': 'instructores/js/instructores.js',
-    }
-    
-    return render(request, 'instructores.html', context)
+    return  render (
+        request,
+        'instructores.html', 
+        {
+            'area': area_user ,
+            'instructores':instructores_by_area,
+            
+        }
+    )
