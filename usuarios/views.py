@@ -46,7 +46,6 @@ class Registro(View):
 
 def recovery_password(request, email):
     return render(request, 'recovery_password.html', {'email': email})
-
 # Vista para la gestión de instructores -
 # Vista para la gestión de instructores -
 def list_user_by_area(request):
