@@ -1,1 +1,37 @@
 {% extends 'layout.html' %}
+{% block title %}Panel del Funcionario{% endblock %}
+
+{% block content %}
+<section class="summary">
+  <div class="summary__card">
+    <p class="summary__number">8</p>
+    <p class="summary__label">Solicitudes por revisar</p>
+  </div>
+  <div class="summary__card summary__card--blue">
+    <p class="summary__number">3</p>
+    <p class="summary__label">Reportes generados</p>
+  </div>
+</section>
+
+<section class="table">
+  <div class="table__wrapper">
+    <h2 class="table__title">Solicitudes recientes</h2>
+    <table class="table__content">
+      <thead class="table__head">
+        <tr>
+          <th>Programa</th>
+          <th>Estado</th>
+          <th>Fecha</th>
+        </tr>
+      </thead>
+      <tbody class="table__body">
+        <tr>
+          <td>Contabilidad básica</td>
+          <td><span class="badge badge--warning">Pendiente</span></td>
+          <td>30 de agosto 2025</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
