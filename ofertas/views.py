@@ -87,7 +87,7 @@ def crear_reporte(request):
     if request.method == "POST":
         tipo = request.POST.get("tipo_programa")
         cantidad = request.POST.get("cantidad")
-        # Guardar el reporte en la tabla ProgramaFormacion
+
         for _ in range(int(cantidad)):
             ProgramaFormacion.objects.create(tipo_programa=tipo)
     return redirect('ofertas:reportes')
