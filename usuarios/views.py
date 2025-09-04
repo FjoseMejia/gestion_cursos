@@ -46,20 +46,51 @@ class Registro(View):
 
 def recovery_password(request, email):
     return render(request, 'recovery_password.html', {'email': email})
-# Vista para la gestión de instructores -
-# Vista para la gestión de instructores -
-def list_user_by_area(request):
-    area_user= request.user.area.nombre
-    instructores_by_area = Perfil.objects.filter(area__nombre=area_user).values(
-        'username', 'first_name', 'email'
-    )
 
-    return  render (
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def instructores(request):
+    user = request.user
+
+    if user.groups.filter(name='Coordinador').exists():
+        # 🔹 Coordinador → solo instructores de su área
+        area_user = user.area.nombre
+        instructores = Perfil.objects.filter(
+            area__nombre=area_user,
+            groups__name='Instructor'
+        ).exclude(
+            username=user.username
+        ).values('username','first_name', 'last_name', 'email','telefono','numero_identificacion',)
+
+    elif user.groups.filter(name='Funcionario').exists():
+        # 🔹 Funcionario → todos los instructores (sin importar el área)
+        area_user = "Todas las áreas"
+        instructores = Perfil.objects.filter(
+            groups__name='Instructor'
+        ).exclude(
+            username=user.username
+        ).values('username','first_name', 'last_name', 'email','telefono','numero_identificacion',)
+
+    elif user.is_superuser:  
+        # 🔹 Superusuario → todos los roles (Coordinador, Funcionario e Instructor)
+        area_user = "Todas las áreas y roles"
+        instructores = Perfil.objects.filter(
+            groups__name__in=['Coordinador', 'Funcionario', 'Instructor']
+        ).exclude(
+            username=user.username
+        ).values(
+            'username','first_name','last_name','email',
+            'telefono','numero_identificacion','groups__name','area'
+        )
+
+    return render(
         request,
-        'instructores.html', 
+        'instructores.html',
         {
-            'area': area_user ,
-            'instructores':instructores_by_area,
-            
+            'area': area_user,
+            'instructores': instructores,
+            'css_file': 'instructores/css/instructores.css',
+            'js_file': 'instructores/js/instructores.js',
         }
     )
