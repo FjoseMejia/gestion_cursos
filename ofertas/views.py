@@ -1,10 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from .models import ProgramaFormacion
 from ofertas.forms import OfertaForm
 from django.db.models import Count
 from django.shortcuts import redirect
+from .models import NivelFormacion
 
 
 # Create your views here.

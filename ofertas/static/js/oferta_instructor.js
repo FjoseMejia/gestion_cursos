@@ -26,8 +26,4 @@ document.addEventListener("DOMContentLoaded", () => {
     //Filtrar cursos
 
 
-
-
-
-
 });
