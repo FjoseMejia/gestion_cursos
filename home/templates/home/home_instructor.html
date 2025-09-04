@@ -1,53 +1,34 @@
 {% extends 'layout.html' %}
-{% block title %}Página de inicio{% endblock %}
+{% block title %}Panel del Instructor{% endblock %}
 
 {% block content %}
 <section class="summary">
   <div class="summary__card">
-    <p class="summary__number">12</p>
-    <p class="summary__label">Solicitudes enviadas</p>
-  </div>
-  <div class="summary__card summary__card--blue">
-    <p class="summary__number">6</p>
-    <p class="summary__label">Aprobadas</p>
+    <p class="summary__number">3</p>
+    <p class="summary__label">Ofertas activas</p>
   </div>
   <div class="summary__card summary__card--green">
-    <p class="summary__number">4</p>
-    <p class="summary__label">Solicitudes pendientes</p>
+    <p class="summary__number">1</p>
+    <p class="summary__label">Histórico</p>
   </div>
 </section>
 
 <section class="table">
   <div class="table__wrapper">
-    <h2 class="table__title">Últimas Solicitudes</h2>
+    <h2 class="table__title">Mis ofertas</h2>
     <table class="table__content">
       <thead class="table__head">
         <tr>
-          <th>Solicitud</th>
-          <th>Estado</th>
-          <th>Fecha</th>
+          <th>Nombre</th>
+          <th>Duración</th>
+          <th>Inicio</th>
         </tr>
       </thead>
       <tbody class="table__body">
         <tr>
-          <td>Análisis y desarrollo de software</td>
-          <td><span class="badge badge--success">Aprobada</span></td>
-          <td>15 de abril 2025</td>
-        </tr>
-        <tr>
-          <td>Manejo de herramientas ofimáticas</td>
-          <td><span class="badge badge--warning">Pendiente</span></td>
-          <td>15 de abril 2025</td>
-        </tr>
-        <tr>
-          <td>Algoritmos avanzados</td>
-          <td><span class="badge badge--success">Aprobada</span></td>
-          <td>15 de abril 2025</td>
-        </tr>
-        <tr>
-          <td>Matemáticas discretas</td>
-          <td><span class="badge badge--danger">Rechazada</span></td>
-          <td>15 de abril 2025</td>
+          <td>Programación en Python</td>
+          <td>40h</td>
+          <td>01 septiembre 2025</td>
         </tr>
       </tbody>
     </table>
