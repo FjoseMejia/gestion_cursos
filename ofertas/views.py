@@ -1,13 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from .models import ProgramaFormacion
 from ofertas.forms import OfertaForm
 from django.db.models import Count
 from django.shortcuts import redirect
 from openpyxl import Workbook
 import io
-from.models import  RedConocimientos
+from.models import  Oferta
 
 
 # Create your views here.
@@ -96,7 +96,7 @@ def crear_reporte(request):
     
 def exportar_a_excel(request):
     """Genera y descarga un archivo de Excel con los datos de todas las inscripciones."""
-    datos = RedConocimientos.objects.all().order_by('id')
+    datos =Oferta.objects.select_related(oferta__nombre="CAMPESENA").values('modalidad_oferta', 'tipo_oferta', 'entorno_geografico', 'cupo', 'subsector', 'convenio', 'ficha', 'codigo_de_solicitud', 'fecha_icinio', 'fecha_terminacion', 'fecha_inscripcion', ).order_by('id')
 
     output = io.BytesIO()
     workbook = Workbook()
@@ -123,9 +123,9 @@ def exportar_a_excel(request):
 
     # Llena los datos en las filas correspondientes
     row_num = 2
-    for RedConocimientos in datos:
-        sheet[f'A{row_num}'] = RedConocimientos.id
-        sheet[f'B{row_num}'] = RedConocimientos.nombre
+    for values in datos:
+        sheet[f'A{row_num}'] = values.id
+        sheet[f'B{row_num}'] = values.nombre
         # sheet[f'E{row_num}'] = ModalidadOferta.tipo_poblacion_aspirante
         row_num += 1
 
