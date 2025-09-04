@@ -24,6 +24,30 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     //Filtrar cursos
+    const selectorNiveles= document.querySelector("#selector-horas");
+    const selectorCursos= document.querySelector("#selector-cursos");
 
+    fetch('/api/niveles/')
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(nivel => {
+                selectorNiveles.innerHTML += `<option value="${nivel.id}">${nivel.nombre}</option>`;
+            });
+        });
+
+    selectorNiveles.addEventListener('change', function() {
+    const nivelId = this.value;
+
+    selectorCursos.innerHTML = '<option value="">-- Escoge curso --</option>';
+
+    if (!nivelId) return;
+
+    fetch(`/api/cursos_por_nivel/${nivelId}/`)
+        .then(res => res.json())
+        .then(data => {
+            data.forEach(curso => {
+                selectorCursos.innerHTML += `<option value="${curso.id}">${curso.nombre}</option>`;
+            });
+        });
 
 });
