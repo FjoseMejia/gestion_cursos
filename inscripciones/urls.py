@@ -22,12 +22,7 @@ from django.urls import path
 from . import views 
 
 urlpatterns = [
-<<<<<<< HEAD
-    # Todos los patrones de URL deben estar en una sola lista
-    path('admin/', admin.site.urls),
-=======
    
->>>>>>> c124c7a (olvido contraseña con sus vistas)
 
     # La URL para exportar el archivo de Excel
     #path('exportar-excel/', views.exportar_a_excel, name='exportar_excel'),
