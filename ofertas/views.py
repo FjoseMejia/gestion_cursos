@@ -1,6 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse, HttpResponse
+from django.contrib import messages
+
 from .models import ProgramaFormacion
 from ofertas.forms import OfertaForm
 from django.db.models import Count
@@ -8,6 +11,7 @@ from django.shortcuts import redirect
 from openpyxl import Workbook
 import io
 from.models import  Oferta
+from .models import Estado
 
 
 # Create your views here.
@@ -16,7 +20,32 @@ def index(request):
     user = request.user
     grupo = user.groups.first()
     grupo_nombre = grupo.name if grupo else "Invitado"
-    form = OfertaForm()
+    duraciones = ProgramaFormacion.objects.values_list('duracion', flat=True).distinct().order_by('duracion')
+
+    if request.method == "POST":
+        form = OfertaForm(request.POST, request.FILES)
+        if form.is_valid():
+            oferta = form.save(commit=False)
+            oferta.usuario = user
+
+            programa_id = request.POST.get('programa')
+
+            if programa_id:
+                try:
+                    oferta.programa = ProgramaFormacion.objects.get(id=programa_id)
+                except ProgramaFormacion.DoesNotExist:
+                    messages.error(request, "El programa seleccionado no existe.")
+                    return redirect('ofertas:index')
+
+            oferta.estado = Estado.objects.get(id=1)
+            oferta.save()
+            messages.success(request, "¡Solicitud enviada correctamente!")
+            return redirect('ofertas:index')
+        else:
+            messages.error(request, "Hubo un error al enviar la solicitud. Verifica los datos.")
+            print(form.errors.as_json())
+    else:
+        form = OfertaForm()
 
     return render(
         request,
@@ -25,13 +54,11 @@ def index(request):
             'grupo_nombre': grupo_nombre,
             'css_file': f'css/oferta_{grupo_nombre.lower()}.css',
             'js_file': f'js/oferta_{grupo_nombre.lower()}.js',
-            'form': form
+            'form': form,
+            'duraciones': duraciones
         }
     )
 
-def duraciones_disponibles(request):
-    duraciones = ProgramaFormacion.objects.values_list('duracion', flat=True).distinct().order_by('duracion')
-    return JsonResponse(list(duraciones), safe=False)
 
 def programas_sugeridos(request):
     duracion = request.GET.get("duracion", "")
@@ -89,7 +116,7 @@ def crear_reporte(request):
     if request.method == "POST":
         tipo = request.POST.get("tipo_programa")
         cantidad = request.POST.get("cantidad")
-        # Guardar el reporte en la tabla ProgramaFormacion
+
         for _ in range(int(cantidad)):
             ProgramaFormacion.objects.create(tipo_programa=tipo)
     return redirect('ofertas:reportes')
