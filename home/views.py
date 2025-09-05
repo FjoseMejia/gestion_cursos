@@ -37,7 +37,7 @@ def home(request):
 
     template = role_home_map.get(grupo_nombre, 'home/home_invitado.html')
     css_filename = f'css/home_{grupo_nombre.lower()}.css'
->>>>>>> c124c7a (olvido contraseña con sus vistas)
+
 
     return render(
         request,
