@@ -1,0 +1,15 @@
+.summary__card--blue {
+  background-color: #1976d2;
+}
+
+.summary__card--green {
+  background-color: #2e7d32;
+}
+
+.badge--success {
+  background-color: #388e3c;
+}
+
+.badge--warning {
+  background-color: #fbc02d;
+}

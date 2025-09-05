@@ -204,3 +204,4 @@ class Oferta(models.Model):
 
     def __str__(self):
         return f"Oferta {self.codigo_de_solicitud} - {self.tipo_oferta}"
+    
