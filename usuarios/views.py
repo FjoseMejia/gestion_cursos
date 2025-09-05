@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.models import Group
 from usuarios.models import Perfil
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -44,11 +45,6 @@ class Registro(View):
 
             return render(request, "registro/index.html", {'form': form})
 
-<<<<<<< HEAD
-def recovery_password(request, email):
-    return render(request, 'recovery_password.html', {'email': email})
-=======
-
 
 # Vista para la gestión de instructores -
 def list_user_by_area(request):
@@ -56,9 +52,8 @@ def list_user_by_area(request):
     instructores_by_area = Perfil.objects.filter(area__nombre=area_user).values(
         'username', 'first_name', 'email'
     )
->>>>>>> c124c7a (olvido contraseña con sus vistas)
 
-from django.contrib.auth.decorators import login_required
+
 
 @login_required
 def instructores(request):
