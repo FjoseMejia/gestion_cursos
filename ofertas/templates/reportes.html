@@ -5,8 +5,7 @@
 <div class="report">
     <div class="report-header">
         <h2>📊 Reporte de Fichas</h2>
-        <!-- Botón para abrir el modal -->
-        <button id="btnAgregar" class="btn-agregar">➕ Agregar Reporte</button>
+       
     </div>
 
     <!-- Totales -->
@@ -49,10 +48,11 @@
                 </tr>
             </tbody>
     </table>
-
+    <!-- Botón para abrir el modal -->
+    <a href="{% url 'ofertas:descargar' %}" class="btn-download">Descargar Excel</a>
 </div>
 
-<!-- Modal -->
+<!-- Modal
 <div id="modalAgregar" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
@@ -68,7 +68,7 @@
         <button type="submit" class="btn-agregar">Guardar</button>
     </form>
   </div>
-</div>
+</div> -->
 
 <!-- JS para abrir/cerrar modal -->
 <script>

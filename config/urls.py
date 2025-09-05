@@ -20,10 +20,13 @@ from ofertas import views as ofertas_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('usuarios.urls')),
-    path('home', include('home.urls')),
+    path('', include('home.urls')),
+    path('usuarios/', include('usuarios.urls')),
     path('ofertas', include('ofertas.urls')),
     path('inscripciones', include('inscripciones.urls')),
+<<<<<<< HEAD
     path('reportes/', ofertas_views.reportes, name="reportes"),  # 👈 ruta directa a reportes
     
+=======
+>>>>>>> c58986ac80c599961fe0b0dd61f4369095db39ce
 ]

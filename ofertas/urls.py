@@ -9,4 +9,5 @@ urlpatterns = [
     path("solicitud/", views.solicitudes, name="solicitud"),
     path("reportes/", views.reportes, name='reportes'),
     path("reportes/crear/", views.crear_reporte, name='crear_reporte'),
+    path("reportes/export-excel/", views.exportar_a_excel, name='descargar'),
 ]

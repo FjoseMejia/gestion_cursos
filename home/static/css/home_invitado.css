@@ -1,0 +1,16 @@
+.welcome {
+  padding: 2rem;
+  text-align: center;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+.welcome h2 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.welcome p {
+  color: #777;
+}
