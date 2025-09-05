@@ -23,7 +23,8 @@ urlpatterns = [
     path('', include('home.urls')),
     path('', include('usuarios.urls_reset')),     # Este NO tiene app_name
     path('usuarios/', include('usuarios.urls')),
-    path('ofertas', include('ofertas.urls')),
-    path('inscripciones', include('inscripciones.urls')),
+    path('ofertas/', include('ofertas.urls')),
+    #path('inscripciones', include('inscripciones.urls')),
+    path('inscripciones/', include('inscripciones.urls')),  # namespace: inscripciones
     
 ]

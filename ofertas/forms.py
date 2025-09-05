@@ -1,5 +1,29 @@
 from django import forms
-from .models import Oferta, Lugar, Horario, EmpresaSolicitante
+from .models import Oferta, Lugar, Horario, EmpresaSolicitante, ProgramaFormacion
+# Formulario para que el instructor suba la cédula en PDF
+class SubirCedulaForm(forms.ModelForm):
+    class Meta:
+        model = Oferta
+        fields = ['archivo_cedula_pdf']
+        labels = {
+            'archivo_cedula_pdf': 'Subir archivo de cédulas (PDF)',
+        }
+class InstructorArchivoForm(forms.ModelForm):
+    class Meta:
+        model = Oferta
+        fields = ['archivo_cedula_pdf']
+        widgets = {
+            'archivo_cedula_pdf': forms.ClearableFileInput(attrs={'accept': 'application/pdf'})
+        }
+
+# Formulario para funcionario o coordinador que edita el estado y comentario
+class EstadoComentarioForm(forms.ModelForm):
+    class Meta:
+        model = Oferta
+        fields = ['estado', 'comentarios']
+        widgets = {
+            'comentarios': forms.Textarea(attrs={'rows': 3}),
+        }
 
 
 class OfertaForm(forms.ModelForm):
@@ -27,20 +51,26 @@ class OfertaForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class': 'form__input', 'placeholder': 'Subsector económico'})
     )
 
+    programa = forms.ModelChoiceField(
+        queryset= ProgramaFormacion.objects.all(),
+        required=True,
+        label="Curso",
+        widget=forms.Select(attrs={'id': 'selector-cursos', 'class': 'form__input'})
+    )
+
     class Meta:
         model = Oferta
         fields = [
             'modalidad_oferta', 'tipo_oferta', 'entorno_geografico',
             'programa', 'cupo', 'empresa_solicitante',
             'programa_especial',
-            'fecha_inicio', 'fecha_de_inscripcion', 'fecha_terminacion',
+            'fecha_inicio', 'fecha_de_inscripcion',  'archivo',
         ]
 
         widgets = {
             'modalidad_oferta': forms.Select(),
             'tipo_oferta': forms.Select(),
             'entorno_geografico': forms.Select(),
-            'programa': forms.TextInput(attrs={'id': 'programa-input', 'class': 'form__input', 'placeholder': 'Escribe el curso...'}),
             'cupo': forms.NumberInput(attrs={'class': 'form__input', 'placeholder': 'Cupo', 'min': 1}),
             'programa_especial': forms.Select(),
             'ficha': forms.TextInput(attrs={'class': 'form__input', 'placeholder': 'Ficha'}),

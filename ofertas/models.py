@@ -134,9 +134,9 @@ class HorarioDia(models.Model):
         return f"{self.dia.nombre}: {self.horario.hora_inicio}-{self.horario.hora_fin}"
 
 class Estado(models.Model):
-    color= models.CharField(max_length= 15)
-    nombre= models.CharField(max_length= 24)
-
+    nombre = models.CharField(max_length=50)
+    def __str__(self):
+        return self.nombre
 
 class ProgramaEspecial(models.Model):
     nombre= models.CharField(max_length= 255)
@@ -150,8 +150,9 @@ class EmpresaSolicitante(models.Model):
 
 class Oferta(models.Model):
     creado_en= models.DateTimeField(auto_now_add=True)
+    archivo_cedula_pdf = models.FileField(upload_to='cedulas/', blank=True, null=True)
     actualizado_en= models.DateTimeField(auto_now=True)
-
+    comentarios = models.TextField(null=True, blank=True)  # 👈 Campo opcional para comentarios
     usuario= models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT
@@ -192,16 +193,15 @@ class Oferta(models.Model):
     lugar= models.ForeignKey(Lugar, on_delete=models.PROTECT, null=True, blank=True)
     horario= models.ForeignKey(Horario, on_delete=models.PROTECT, null=True, blank=True)
     estado= models.ForeignKey(Estado, on_delete=models.PROTECT)
-
+    archivo = models.FileField(upload_to='ofertas/', default='', blank=True)
     cupo= models.IntegerField()
     empresa_solicitante= models.ForeignKey(EmpresaSolicitante, on_delete=models.PROTECT, null=True, blank=True)
     programa_especial= models.ForeignKey(ProgramaEspecial, on_delete=models.PROTECT, null=True, blank=True)
     ficha= models.CharField(max_length=255, null=True, blank=True)
     codigo_de_solicitud= models.CharField(max_length=100, null=True, blank=True)
     fecha_inicio= models.DateField()
-    fecha_terminacion= models.DateField()
-    fecha_de_inscripcion= models.DateField()
+    fecha_terminacion= models.DateField(null=True, blank=True)
+    fecha_de_inscripcion= models.DateField(null=True, blank=True)
 
     def __str__(self):
         return f"Oferta {self.codigo_de_solicitud} - {self.tipo_oferta}"
-    

@@ -1,0 +1,14 @@
+{# templates/ofertas/subir_cedula_form.html #}
+{% extends "layout.html" %}
+{% block content %}
+<h2>Subir cédula para la solicitud #{{ oferta.id }}</h2>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-primary">Subir cédula</button>
+</form>
+
+<a href="{% url 'ofertas:index' %}">← Volver</a>
+{% endblock %}
