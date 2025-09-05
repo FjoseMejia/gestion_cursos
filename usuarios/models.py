@@ -1,6 +1,13 @@
-
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+# No hay errores evidentes en la importación de modelos.
+# Si ves errores, pueden deberse a:
+# - Migraciones pendientes o incorrectas.
+# - Configuración de AUTH_USER_MODEL en settings.py.
+# - Problemas de indentación o sintaxis fuera de este fragmento.
+# - Falta de __init__.py en el directorio de la app.
+# El código en $PLACEHOLDER$ está correcto.
+
 
 class TipoIdentificacion(models.Model):
     nombre = models.CharField(max_length=50)

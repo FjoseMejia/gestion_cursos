@@ -2,12 +2,12 @@ from django.urls import reverse
 
 def sidebar_groups(request):
     user = request.user
-    grupo_nombre = user.groups.first().name if user.groups.exists() else "Invitado"
+    grupo_nombre = user.groups.first().name if user.groups.exists() else "SuperAdmin"
 
     role_links = {
         "SuperAdmin": [
             {
-                "category": "Principal",
+                "category": "Francisco",
                 "links": [
                     {"url": "#", "icon": "fas fa-chart-bar", "label": "Reportes"},
                 ],
@@ -15,7 +15,7 @@ def sidebar_groups(request):
             {
                 "category": "Gestión",
                 "links": [
-                    {"url": '#', "icon": "fas fa-users", "label": "Usuarios"},
+                    {"url": reverse('usuarios:instructores'), "icon": "fas fa-users", "label": "Usuarios"},
                     {"url": "#", "icon": "fas fa-book", "label": "Programas de formación"},
                     {"url": "#", "icon": "fas fa-tasks", "label": "Ofertas"},
                 ],
@@ -34,9 +34,11 @@ def sidebar_groups(request):
             {
                 "category": "Gestión",
                 "links": [
-                    {"url": reverse('ofertas:solicitud'), "icon": "fas fa-inbox", "label": "Solicitudes"},
+                    {"url": reverse('ofertas:solicitudes'), "icon": "fas fa-inbox", "label": "Solicitudes"},
                     {"url": reverse('ofertas:reportes'), "icon": "fas fa-chart-line", "label": "Reportes"},
                     {"url": "#", "icon": "fas fa-book-open", "label": "Programas"},
+                    {"url":  reverse('usuarios:instructores'), "icon": "fas fa-chalkboard-teacher", "label": "Instructores"},
+
                 ]
             }
         ],
@@ -44,6 +46,7 @@ def sidebar_groups(request):
             {
                 "category": "Gestión",
                 "links": [
+                    {"url": reverse('ofertas:solicitudes'), "icon": "fas fa-inbox", "label": "Solicitudes"},
                     {"url": "#", "icon": "fas fa-inbox", "label": "Solicitudes"},
                     {"url":  reverse('usuarios:instructores'), "icon": "fas fa-chalkboard-teacher", "label": "Instructores"},
                 ]

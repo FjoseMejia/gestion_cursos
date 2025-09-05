@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Cambiar el color del título <h1> dinámicamente
     const titulo = document.querySelector("h1");
     if (titulo) {
-        titulo.style.color = "#2563eb"; // azul
+        titulo.style.color = "#022549"; // azul
     }
 
     // Si tienes un formulario, podrías validar campos

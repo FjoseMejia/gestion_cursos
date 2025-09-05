@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.models import Group
 from usuarios.models import Perfil
+from django.contrib.auth.decorators import login_required
 
 def login(request):
     if request.method == "POST":
@@ -36,15 +37,13 @@ class Registro(View):
             else:
                 grupo, created = Group.objects.get_or_create(name='Invitado')
                 user.groups.add(grupo)
-
+            messages.success(request, '¡Registro exitoso! Ahora puedes iniciar sesión.')
             return redirect('usuarios:login')
         else:
 
             return render(request, "registro/index.html", {'form': form})
 
-def recovery_password(request, email):
-    return render(request, 'recovery_password.html', {'email': email})
-# Vista para la gestión de instructores -
+
 # Vista para la gestión de instructores -
 def list_user_by_area(request):
     area_user= request.user.area.nombre
@@ -52,12 +51,50 @@ def list_user_by_area(request):
         'username', 'first_name', 'email'
     )
 
-    return  render (
+
+
+@login_required
+def instructores(request):
+    user = request.user
+
+    if user.groups.filter(name='Coordinador').exists():
+        # 🔹 Coordinador → solo instructores de su área
+        area_user = user.area.nombre
+        instructores = Perfil.objects.filter(
+            area__nombre=area_user,
+            groups__name='Instructor'
+        ).exclude(
+            username=user.username
+        ).values('username','first_name', 'last_name', 'email','telefono','numero_identificacion',)
+
+    elif user.groups.filter(name='Funcionario').exists():
+        # 🔹 Funcionario → todos los instructores (sin importar el área)
+        area_user = "Todas las áreas"
+        instructores = Perfil.objects.filter(
+            groups__name='Instructor'
+        ).exclude(
+            username=user.username
+        ).values('username','first_name', 'last_name', 'email','telefono','numero_identificacion',)
+
+    elif user.is_superuser:  
+        # 🔹 Superusuario → todos los roles (Coordinador, Funcionario e Instructor)
+        area_user = "Todas las áreas y roles"
+        instructores = Perfil.objects.filter(
+            groups__name__in=['Coordinador', 'Funcionario', 'Instructor']
+        ).exclude(
+            username=user.username
+        ).values(
+            'username','first_name','last_name','email',
+            'telefono','numero_identificacion','groups__name','area'
+        )
+
+    return render(
         request,
-        'instructores.html', 
+        'instructores.html',
         {
-            'area': area_user ,
-            'instructores':instructores_by_area,
-            
+            'area': area_user,
+            'instructores': instructores,
+            'css_file': 'instructores/css/instructores.css',
+            'js_file': 'instructores/js/instructores.js',
         }
     )

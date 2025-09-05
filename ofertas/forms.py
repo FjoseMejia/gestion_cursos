@@ -1,5 +1,29 @@
 from django import forms
 from .models import Oferta, Lugar, Horario, EmpresaSolicitante, ProgramaFormacion
+# Formulario para que el instructor suba la cédula en PDF
+class SubirCedulaForm(forms.ModelForm):
+    class Meta:
+        model = Oferta
+        fields = ['archivo_cedula_pdf']
+        labels = {
+            'archivo_cedula_pdf': 'Subir archivo de cédulas (PDF)',
+        }
+class InstructorArchivoForm(forms.ModelForm):
+    class Meta:
+        model = Oferta
+        fields = ['archivo_cedula_pdf']
+        widgets = {
+            'archivo_cedula_pdf': forms.ClearableFileInput(attrs={'accept': 'application/pdf'})
+        }
+
+# Formulario para funcionario o coordinador que edita el estado y comentario
+class EstadoComentarioForm(forms.ModelForm):
+    class Meta:
+        model = Oferta
+        fields = ['estado', 'comentarios']
+        widgets = {
+            'comentarios': forms.Textarea(attrs={'rows': 3}),
+        }
 
 
 class OfertaForm(forms.ModelForm):
