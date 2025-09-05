@@ -1,31 +1,66 @@
 {% extends 'layout.html' %}
+{% load static %}
+
 
 {% block content %}
-    <h1>Gestión de Instructores</h1>
-    <p>Rol del usuario: {{ grupo_nombre }}</p>
-    <p>Total de perfiles: {{ total_instructores }}</p>
+<div class="instructores-container">
+    <div class="header">
+        <h1>Listado de Instructores</h1>
+        <button class="btn-nuevo">+ Nuevo Instructor</button>
+        
+    </div>
 
-    <h2>Perfiles</h2>
-    <ul>
-    {% for perfil in perfiles %}
-        <li>
-            {{ perfil.username }} - {{ perfil.email }}
-            ({{ perfil.groups.all|join:", " }})
-            {% if perfil.telefono %} - Tel: {{ perfil.telefono }}{% endif %}
-            {% if perfil.tipo_identificacion %} - ID: {{ perfil.tipo_identificacion }} {{ perfil.numero_identificacion }}{% endif %}
-            {% if perfil.area %} - Área: {{ perfil.area }}{% endif %}
-            {% if perfil.es_verificado %} - Verificado {% else %} - No verificado {% endif %}
-        </li>
-    {% empty %}
-        <li>No hay perfiles disponibles.</li>
-    {% endfor %}
-    </ul>
+    <table class="tabla-instructores">
+        <thead>
+            <tr>
+                <th>Nombre usuario</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+                <th>CC</th>
+                <th>Teléfono</th>
+                <th>Correo</th>
+                <th>Estado</th>
+                <th>Aciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for instructor in instructores %}
+            <tr>
+                <td>{{ instructor.username }}</td>
+                <td>{{ instructor.first_name }}</td>
+                <td>{{ instructor.last_name }}</td>
+                <td>{{ instructor.numero_identificacion }}</td>
+                <td>{{ instructor.telefono }}</td>
+                <td>{{ instructor.email }}</td>
+                <td>{{ instructor.area}}</td>
+                
+                
+                <td>
+                    {% if instructor.estado %}
+                        <span class="estado activo">Activo ✓</span>
+                    {% else %}
+                        <span class="estado inactivo">Inactivo ✗</span>
+                    {% endif %}
+                </td>
+                <td class="acciones">
+                    <button class="btn-accion editar" title="Editar">✎</button>
+                    <button class="btn-accion usuarios" title="Activar">👥</button>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="11" class="empty">No hay instructores registrados.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
 
 {% block css %}
-    <link rel="stylesheet" href="/static/{{ css_file }}">
+<link rel="stylesheet" href="{% static 'css/instructores.css' %}">
 {% endblock %}
 
 {% block js %}
-    <script src="/static/{{ js_file }}"></script>
+<script src="{% static 'js/instructores.js' %}"></script>
 {% endblock %}
