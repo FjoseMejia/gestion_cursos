@@ -192,15 +192,15 @@ class Oferta(models.Model):
     lugar= models.ForeignKey(Lugar, on_delete=models.PROTECT, null=True, blank=True)
     horario= models.ForeignKey(Horario, on_delete=models.PROTECT, null=True, blank=True)
     estado= models.ForeignKey(Estado, on_delete=models.PROTECT)
-
+    archivo = models.FileField(upload_to='ofertas/', default='', blank=True)
     cupo= models.IntegerField()
     empresa_solicitante= models.ForeignKey(EmpresaSolicitante, on_delete=models.PROTECT, null=True, blank=True)
     programa_especial= models.ForeignKey(ProgramaEspecial, on_delete=models.PROTECT, null=True, blank=True)
     ficha= models.CharField(max_length=255, null=True, blank=True)
     codigo_de_solicitud= models.CharField(max_length=100, null=True, blank=True)
     fecha_inicio= models.DateField()
-    fecha_terminacion= models.DateField()
-    fecha_de_inscripcion= models.DateField()
+    fecha_terminacion= models.DateField(null=True, blank=True)
+    fecha_de_inscripcion= models.DateField(null=True, blank=True)
 
     def __str__(self):
         return f"Oferta {self.codigo_de_solicitud} - {self.tipo_oferta}"
