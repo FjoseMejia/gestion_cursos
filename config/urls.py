@@ -25,4 +25,5 @@ urlpatterns = [
     path('ofertas', include('ofertas.urls')),
     path('inscripciones', include('inscripciones.urls')),
     path('reportes/', ofertas_views.reportes, name="reportes"),  # 👈 ruta directa a reportes
+    
 ]

@@ -6,7 +6,7 @@
 <div class="instructores-container">
     <div class="header">
         <h1>Listado de Instructores</h1>
-        <button class="btn-nuevo">+ Nuevo Instructor</button>
+<a href="{% url 'usuarios:crear_instructor' %}" class="btn-nuevo">+ Nuevo Instructor</a>
         
     </div>
 
@@ -19,6 +19,7 @@
                 <th>CC</th>
                 <th>Teléfono</th>
                 <th>Correo</th>
+                <th>Area</th>
                 <th>Estado</th>
                 <th>Aciones</th>
             </tr>
@@ -32,11 +33,12 @@
                 <td>{{ instructor.numero_identificacion }}</td>
                 <td>{{ instructor.telefono }}</td>
                 <td>{{ instructor.email }}</td>
-                <td>{{ instructor.area}}</td>
+                <td>{{ instructor.area__nombre}}</td>
                 
                 
                 <td>
-                    {% if instructor.estado %}
+                    {% if instructor.is_active  %}
+                    
                         <span class="estado activo">Activo ✓</span>
                     {% else %}
                         <span class="estado inactivo">Inactivo ✗</span>

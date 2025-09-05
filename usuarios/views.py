@@ -5,6 +5,9 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.models import Group
 from usuarios.models import Perfil
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
+from usuarios.forms import PerfilForm, InstructorForm  # <-- importa aquí
 
 # Create your views here.
 
@@ -47,7 +50,6 @@ class Registro(View):
 def recovery_password(request, email):
     return render(request, 'recovery_password.html', {'email': email})
 
-from django.contrib.auth.decorators import login_required
 
 @login_required
 def instructores(request):
@@ -81,7 +83,7 @@ def instructores(request):
             username=user.username
         ).values(
             'username','first_name','last_name','email',
-            'telefono','numero_identificacion','groups__name','area'
+            'telefono','numero_identificacion','groups__name','area__nombre','is_active'
         )
 
     return render(
@@ -94,3 +96,26 @@ def instructores(request):
             'js_file': 'instructores/js/instructores.js',
         }
     )
+# BOTONES
+# usuarios/views.py
+
+
+User = get_user_model()
+
+def crear_instructor(request):
+    if request.method == "POST":
+        form = InstructorForm(request.POST, user=request.user)  # 🔹 aquí pasamos el user
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password("123456")  # contraseña por defecto
+            user.save()
+
+            grupo = form.cleaned_data.get("grupo")
+            if grupo:
+                user.groups.add(grupo)
+
+            return redirect("usuarios:instructores")
+    else:
+        form = InstructorForm(user=request.user)  # 🔹 aquí también pasamos el user
+
+    return render(request, "nuevo_instructor.html", {"form": form})
