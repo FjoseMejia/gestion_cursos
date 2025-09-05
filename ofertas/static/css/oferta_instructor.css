@@ -127,3 +127,6 @@ table th {
     gap: 10px;
 }
 
+.campos-empresa {
+    display: none;
+}

@@ -6,8 +6,6 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.models import Group
 from usuarios.models import Perfil
 
-# Create your views here.
-
 def login(request):
     if request.method == "POST":
         username = request.POST.get("username")
