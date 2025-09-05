@@ -1,97 +1,178 @@
 {% extends 'layout.html' %}
-{% block title %}Gestion de Ofertas{% endblock %}
+{% block title %}Gestión de Ofertas{% endblock %}
 
 {% block content %}
 <div id="requests-view" class="view-container">
     <div class="page-title">
         <h1>Gestiona tus solicitudes</h1>
         <button class="btn btn-primary" id="new-request-btn">
-        <i class="fas fa-plus"></i> Nueva Solicitud
+            <i class="fas fa-plus"></i> Nueva Solicitud
         </button>
     </div>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
     <div class="card">
-      <div class="card-header">
-        <div class="card-title">Todas las Solicitudes</div>
-        <div class="search-bar">
-          <i class="fas fa-search"></i>
-          <input
-            type="text"
-            placeholder="Buscar solicitud..."
-            id="request-search"
-          />
+        <div class="card-header">
+            <div class="card-title">Todas las Solicitudes</div>
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Buscar solicitud..." id="request-search"/>
+            </div>
         </div>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Curso Solicitado</th>
-            <th>Solicitante</th>
-            <th>Fecha</th>
-            <th>Programa</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="all-requests-table-body">
-          <!-- Content will be populated by JavaScript -->
-        </tbody>
-      </table>
+        <table>
+            <thead>
+                <tr>
+                    <th>Curso Solicitado</th>
+                    <th>Solicitante</th>
+                    <th>Fecha</th>
+                    <th>Programa</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="all-requests-table-body">
+                <!-- Content populated by JS -->
+            </tbody>
+        </table>
     </div>
 </div>
 
+<!-- Modal -->
 <div id="request-modal" class="modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2 class="modal-title">Nueva Oferta</h2>
-      <span class="close">&times;</span>
-    </div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Nueva Solicitud</h2>
+            <span class="close">&times;</span>
+        </div>
 
-    <div class="modal-body">
-       <form class="form" method="POST" action="{% url 'ofertas:index' %}">
-
+        <form class="form" method="POST" action="{% url 'ofertas:index' %}" enctype="multipart/form-data">
             {% csrf_token %}
-            <p>Datos de Oferta</p>
-            <hr>
-            {{ form.modalidad_oferta  }}
-            {{ form.tipo_oferta }}
-            {{ form.entorno_geografico }}
-            <label>Programa especial</label>
-            {{ form.programa_especial }}
+            <div class="modal-body">
 
-            <label>Fecha de Inicio</label>
-            {{ form.fecha_inicio }}
+                <fieldset>
+                    <legend>Datos de Oferta</legend>
 
-            <label>Fecha de Inicio</label>
-            {{ form.fecha_de_inscripcion }}
+                    <div class="form-group">
+                        {{ form.tipo_oferta.label_tag }}
+                        {{ form.tipo_oferta }}
+                        {% for error in form.tipo_oferta.errors %}
+                            <div class="form-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
 
+                    <div class="form-group">
+                        {{ form.modalidad_oferta.label_tag }}
+                        {{ form.modalidad_oferta }}
+                        {% for error in form.modalidad_oferta.errors %}
+                            <div class="form-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
 
-            <p>Datos Empresa</p>
-            <hr>
-            {{ form.empresa_nit }}
-            {{ form.empresa_nombre }}
-            {{ form.empresa_subsector }}
+                    <div class="form-group">
+                        {{ form.entorno_geografico.label_tag }}
+                        {{ form.entorno_geografico }}
+                        {% for error in form.entorno_geografico.errors %}
+                            <div class="form-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
 
-            <p>Programa de formacion</p>
-            <hr>
-            {{ form.programa }}
+                    <div class="form-group">
+                        {{ form.programa_especial.label_tag }}
+                        {{ form.programa_especial }}
+                        {% for error in form.programa_especial.errors %}
+                            <div class="form-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
 
-       </form>
-        <h1>Ejemplo fetch → /api/books/</h1>
+                    <div class="form-group">
+                        {{ form.fecha_inicio.label_tag }}
+                        {{ form.fecha_inicio }}
+                        {% for error in form.fecha_inicio.errors %}
+                            <div class="form-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
 
-          <div>
-            <input id="q" placeholder="Buscar por título (opcional)" />
-            <button id="btn">Buscar</button>
-            <span id="status" class="muted"></span>
-          </div>
+                    <div class="form-group">
+                        {{ form.fecha_de_inscripcion.label_tag }}
+                        {{ form.fecha_de_inscripcion }}
+                        {% for error in form.fecha_de_inscripcion.errors %}
+                            <div class="form-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
 
-          <ul id="list"></ul>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Datos de la Empresa</legend>
+
+                    <div class="form-group">
+                        {{ form.empresa_nombre.label_tag }}
+                        {{ form.empresa_nombre }}
+                        {% for error in form.empresa_nombre.errors %}
+                            <div class="form-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.empresa_nit.label_tag }}
+                        {{ form.empresa_nit }}
+                        {% for error in form.empresa_nit.errors %}
+                            <div class="form-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.empresa_subsector.label_tag }}
+                        {{ form.empresa_subsector }}
+                        {% for error in form.empresa_subsector.errors %}
+                            <div class="form-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.archivo.label_tag }}
+                        {{ form.archivo }}
+                        {% for error in form.archivo.errors %}
+                            <div class="form-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                </fieldset>
+
+                <fieldset>
+                    <legend>Programa de Formación</legend>
+                    {{ form.cupo }}
+                    <div class="form-group">
+                        <label for="selector-duracion">Duración</label>
+                        <select id="selector-duracion" name="duracion">
+                            <option value="">-- Escoge duración --</option>
+                            {% for d in duraciones %}
+                                <option value="{{ d }}">{{ d }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="selector-cursos">Curso</label>
+                        <select id="selector-cursos" name="programa">
+                            <option value="">Escoge curso </option>
+                        </select>
+                    </div>
+                </fieldset>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success" id="submit-request">Enviar Solicitud</button>
+                <button type="button" class="btn btn-danger" id="cancel-request">Cancelar</button>
+            </div>
+        </form>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-danger" id="cancel-request">Cancelar</button>
-      <button class="btn btn-success" id="submit-request">
-        Enviar Solicitud
-      </button>
-    </div>
-  </div>
 </div>
 {% endblock %}
