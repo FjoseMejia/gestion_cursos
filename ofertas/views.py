@@ -24,7 +24,6 @@ def index(request):
             oferta = form.save(commit=False)
             oferta.usuario = user
 
-            # Tomar el ID del programa seleccionado en el select
             programa_id = request.POST.get('programa')
 
             if programa_id:
