@@ -9,7 +9,7 @@ urlpatterns = [
     path("", views.login, name="login"),
     path("registro", Registro.as_view(), name="register"),
     path("instructores/", views.list_user_by_area, name="instructores"),
-
-    # 🔹 Nueva ruta para crear instructor
     path("instructores/nuevo/", views.crear_instructor, name="crear_instructor"),
+    
+    
 ]
