@@ -73,3 +73,24 @@ table th { background: #eee; text-align: left; }
 .close:hover {
     color: black;
 }
+/* para el boton de descragr excel */
+.btn-descargar {
+    background-color: #004a99; /* azul como el menú lateral */
+    color: white;
+    font-weight: bold;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    box-shadow: 0px 4px 6px rgba(0,0,0,0.2);
+}
+
+.btn-descargar:hover {
+    background-color: #003366; /* azul más oscuro */
+    transform: translateY(-2px);
+    box-shadow: 0px 6px 8px rgba(0,0,0,0.3);
+    text-decoration: none;
+}
+
+

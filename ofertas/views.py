@@ -122,6 +122,93 @@ def crear_reporte(request):
     return redirect('ofertas:reportes')
     
 def exportar_a_excel(request):
+    datos = (
+        Oferta.objects
+        .select_related("empresa_solicitante", "estado", "usuario", "programa")
+        .filter(programa__nombre__in=["CAMPESENA", "REGULAR"])
+        .values(
+            'codigo_de_solicitud',
+            'modalidad_oferta',
+            'tipo_oferta',
+            'entorno_geografico',
+            'cupo',
+            'ficha',
+            'fecha_inicio',
+            'fecha_terminacion',
+            'fecha_de_inscripcion',
+            'empresa_solicitante__nombre',
+            'estado__nombre',
+            'usuario__first_name',
+            'usuario__last_name',
+            'programa__nombre',
+        )
+        .order_by('id')
+    )
+
+    output = io.BytesIO()
+    workbook = Workbook()
+    sheet = workbook.active
+
+    # Encabezados
+    sheet['A1'] = 'Código solicitud'
+    sheet['B1'] = 'Modalidad'
+    sheet['C1'] = 'Tipo'
+    sheet['D1'] = 'Entorno'
+    sheet['E1'] = 'Cupo'
+    sheet['F1'] = 'Ficha'
+    sheet['G1'] = 'Fecha inicio'
+    sheet['H1'] = 'Fecha terminación'
+    sheet['I1'] = 'Fecha inscripción'
+    sheet['J1'] = 'Empresa'
+    sheet['K1'] = 'Estado'
+    sheet['L1'] = 'Usuario Nombre'
+    sheet['M1'] = 'Usuario Apellido'
+    sheet['N1'] = 'Tipo Programa'
+
+    # Llenar los datos en cada fila
+    row_num = 2
+    for values in datos:
+        sheet[f'A{row_num}'] = values['codigo_de_solicitud']
+        sheet[f'B{row_num}'] = values['modalidad_oferta']
+        sheet[f'C{row_num}'] = values['tipo_oferta']
+        sheet[f'D{row_num}'] = values['entorno_geografico']
+        sheet[f'E{row_num}'] = values['cupo']
+        sheet[f'F{row_num}'] = values['ficha']
+        sheet[f'G{row_num}'] = values['fecha_inicio']
+        sheet[f'H{row_num}'] = values['fecha_terminacion']
+        sheet[f'I{row_num}'] = values['fecha_de_inscripcion']
+        sheet[f'J{row_num}'] = values['empresa_solicitante__nombre']
+        sheet[f'K{row_num}'] = values['estado__nombre']
+        sheet[f'L{row_num}'] = values['usuario__first_name']
+        sheet[f'M{row_num}'] = values['usuario__last_name']
+        sheet[f'N{row_num}'] = values['programa__nombre']
+        row_num += 3
+
+    #  Resumen al final
+    campesena = Oferta.objects.filter(programa__nombre="CAMPESENA").count()
+    regular = Oferta.objects.filter(programa__nombre="REGULAR").count()
+    total = Oferta.objects.count()
+
+    sheet[f'A{row_num+1}'] = "Totales"
+    sheet[f'A{row_num+2}'] = "Campesena"
+    sheet[f'B{row_num+2}'] = campesena
+    sheet[f'A{row_num+3}'] = "Regular"
+    sheet[f'B{row_num+3}'] = regular
+    sheet[f'A{row_num+4}'] = "Total"
+    sheet[f'B{row_num+4}'] = total
+
+    # Guardar y enviar
+    workbook.save(output)
+    output.seek(0)
+
+    response = HttpResponse(
+        output.getvalue(),
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename="inscripciones.xlsx"'
+
+    return response
+
     """Genera y descarga un archivo de Excel con los datos de todas las inscripciones."""
     datos =Oferta.objects.select_related(oferta__nombre="CAMPESENA").values('modalidad_oferta', 'tipo_oferta', 'entorno_geografico', 'cupo', 'subsector', 'convenio', 'ficha', 'codigo_de_solicitud', 'fecha_icinio', 'fecha_terminacion', 'fecha_inscripcion', ).order_by('id')
 

@@ -7,7 +7,7 @@
         <h2>📊 Reporte de Fichas</h2>
        
     </div>
-
+    {{ nombre }}
     <!-- Totales -->
     <div class="totals">
         <div class="total-card">
@@ -24,7 +24,6 @@
         </div>
     </div>
 
-    <!-- Detalle por tipo de programa -->
     <h3>📌 Detalle por tipo de programa</h3>
         <table>
             <thead>
@@ -36,22 +35,26 @@
             <tbody>
                 <tr>
                     <td>Total CAMPESENA</td>
-                    <td>{{ resumen_totales.total_campesina }}</td>
+                    <td>{{ campesena }}</td>
                 </tr>
                 <tr>
                     <td>Total REGULAR</td>
-                    <td>{{ resumen_totales.total_regular }}</td>
+                    <td>{{ regular }}</td>
                 </tr>
                 <tr>
                     <td>Total General</td>
-                    <td>{{ resumen_totales.total }}</td>
+                    <td>{{ total }}</td>
                 </tr>
             </tbody>
-    </table>
+        </table>
+
     <!-- Botón para abrir el modal -->
-
-    <a href="{% url 'ofertas:descargar' %}" class="btn-descargar">📥 Descargar Excel</a>
-
+   <div style="text-align: right; margin-top: 30px; margin-right: 20px;">
+    <button type="button0" class="btn-descargar">
+         <a href="{% url 'ofertas:exportar_a_excel' %}" class="btn-descargar">📥 Descargar Excel</a>
+    </button>
+   
+</div>
 </div>
 
 <!-- Modal
