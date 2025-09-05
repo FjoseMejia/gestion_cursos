@@ -38,14 +38,25 @@ class Registro(View):
             else:
                 grupo, created = Group.objects.get_or_create(name='Invitado')
                 user.groups.add(grupo)
-
+            messages.success(request, '¡Registro exitoso! Ahora puedes iniciar sesión.')
             return redirect('usuarios:login')
         else:
 
             return render(request, "registro/index.html", {'form': form})
 
+<<<<<<< HEAD
 def recovery_password(request, email):
     return render(request, 'recovery_password.html', {'email': email})
+=======
+
+
+# Vista para la gestión de instructores -
+def list_user_by_area(request):
+    area_user= request.user.area.nombre
+    instructores_by_area = Perfil.objects.filter(area__nombre=area_user).values(
+        'username', 'first_name', 'email'
+    )
+>>>>>>> c124c7a (olvido contraseña con sus vistas)
 
 from django.contrib.auth.decorators import login_required
 

@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 
+
 role_home_map = {
     "SuperAdmin": "home/home_admin.html",
     "Funcionario": "home/home_funcionario.html",
@@ -11,19 +12,15 @@ role_home_map = {
     "Invitado": "home/home_invitado.html",
 }
 app_name= 'home'
-# Create your views here.
+
 @login_required
 def home(request):
     user = request.user
     grupo = user.groups.first()
-
-    if grupo:
-        grupo_nombre = grupo.name
-    else:
-        grupo_nombre = 'Sin grupo'
-
+    grupo_nombre = grupo.name if grupo else 'Invitado'
 
     if user.is_superuser:
+<<<<<<< HEAD
         template = role_home_map.get("SuperAdmin")
         return render(
             
@@ -35,11 +32,18 @@ def home(request):
         )
     else:
         template = role_home_map.get(grupo_nombre)
+=======
+        grupo_nombre = 'SuperAdmin'
+
+    template = role_home_map.get(grupo_nombre, 'home/home_invitado.html')
+    css_filename = f'css/home_{grupo_nombre.lower()}.css'
+>>>>>>> c124c7a (olvido contraseña con sus vistas)
 
     return render(
         request,
         template,
         {
-            'css_file': f'css/home_{grupo_nombre.lower()}.css'
+            'css_file': css_filename,
+            'grupo_nombre': grupo_nombre,
         }
     )

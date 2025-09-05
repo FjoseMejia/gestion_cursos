@@ -42,7 +42,7 @@
         </div>
 
         <div class="login__forgot">
-          <a href="#" class="login__forgot-link">¿Olvidaste tu contraseña?</a>
+        <a href="{% url 'password_reset' %}">¿Olvidaste tu contraseña?</a> 
         </div>
         
         {% if error %}
