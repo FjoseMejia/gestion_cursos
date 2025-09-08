@@ -1,20 +1,67 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
-from django.http import JsonResponse, HttpResponse
 from django.contrib import messages
-
-from .models import ProgramaFormacion
-from django.http import JsonResponse, HttpResponse
-from django.contrib import messages
-
-from .models import ProgramaFormacion,Estado,Oferta
-from ofertas.forms import OfertaForm
+from .models import ProgramaFormacion, Estado, Oferta
+from ofertas.forms import OfertaForm, InstructorArchivoForm, EstadoComentarioForm, SubirCedulaForm, LugarForm
 from django.db.models import Count
-from django.shortcuts import redirect
-from .forms import InstructorArchivoForm, EstadoComentarioForm
-from django.shortcuts import get_object_or_404
-from .forms import SubirCedulaForm
+
+
+def index(request):
+    user = request.user
+    grupo = user.groups.first()
+    grupo_nombre = grupo.name if grupo else "Invitado"
+    duraciones = ProgramaFormacion.objects.values_list('duracion', flat=True).distinct().order_by('duracion')
+
+    if request.method == "POST":
+        form = OfertaForm(request.POST, request.FILES)
+        if form.is_valid():
+            oferta = form.save(commit=False)
+            oferta.usuario = user
+
+            programa_id = request.POST.get('programa')
+            if programa_id:
+                try:
+                    oferta.programa = ProgramaFormacion.objects.get(id=programa_id)
+                except ProgramaFormacion.DoesNotExist:
+                    messages.error(request, "El programa seleccionado no existe.")
+                    return redirect('ofertas:index')
+
+            try:
+                oferta.estado = Estado.objects.get(id=1)
+            except Estado.DoesNotExist:
+                messages.error(request, "Estado inicial no encontrado.")
+                return redirect('ofertas:index')
+
+            oferta.save()
+            messages.success(request, "¡Solicitud enviada correctamente!")
+            return redirect('ofertas:index')
+        else:
+            messages.error(request, "Hubo un error al enviar la solicitud. Verifica los datos.")
+            print(form.errors.as_json())
+    else:
+        oferta_form = OfertaForm()
+        lugar_form = LugarForm(request.POST)
+
+    if grupo_nombre == "Funcionario":
+        solicitudes = Oferta.objects.all().order_by("creado_en")
+    else:
+        solicitudes = Oferta.objects.filter(usuario=user).order_by("creado_en")
+
+
+    return render(
+        request,
+        'oferta.html',
+        {
+            'grupo_nombre': grupo_nombre,
+            'css_file': f'css/oferta.css',
+            'js_file': f'js/oferta.js',
+            'form': oferta_form,
+            'lugar_form': lugar_form,
+            'duraciones': duraciones,
+            'solicitudes': solicitudes,
+        }
+    )
 
 @login_required
 def subir_cedula_link(request, oferta_id):
@@ -25,17 +72,17 @@ def subir_cedula_link(request, oferta_id):
         if form.is_valid():
             form.save()
             messages.success(request, "Archivo de cédulas subido correctamente.")
-            return redirect('ofertas:index')  # Cambia esto según a dónde quieres redirigir
+            return redirect('ofertas:index')
         else:
             messages.error(request, "Error al subir el archivo.")
     else:
-        form = SubirCedulaForm(instance=oferta)
+        form = SubirCedulaForm(instance= oferta)
 
     return render(request, 'ofertas/subir_cedula_form.html', {'form': form, 'oferta': oferta})
+
 def subir_cedula(request, oferta_id):
     oferta = get_object_or_404(Oferta, id=oferta_id)
 
-    # Validar que el usuario que sube el archivo sea el dueño
     if request.user != oferta.usuario:
         messages.error(request, "No tienes permiso para subir archivos a esta oferta.")
         return redirect('ofertas:solicitud')
@@ -52,6 +99,7 @@ def subir_cedula(request, oferta_id):
         form = InstructorArchivoForm(instance=oferta)
 
     return render(request, 'ofertas/subir_cedula.html', {'form': form, 'oferta': oferta})
+
 @login_required
 def editar_estado_comentario(request, oferta_id):
     oferta = get_object_or_404(Oferta, id=oferta_id)
@@ -76,8 +124,6 @@ def editar_estado_comentario(request, oferta_id):
 
     return render(request, 'ofertas/editar_estado_comentario.html', {'form': form, 'oferta': oferta})
 
-
-# Create your views here.
 @login_required
 def cambiar_estado(request, oferta_id, accion):
     from .models import Oferta
@@ -117,65 +163,6 @@ def cambiar_estado(request, oferta_id, accion):
             messages.error(request, "Estado no encontrado.")
     return redirect('ofertas:index')  # Cambia a 'ofertas:index' si usas esa vista por defecto
 
-
-def index(request):
-    from .models import Oferta  # Asegúrate de importar Oferta aquí también
-
-    user = request.user
-    grupo = user.groups.first()
-    grupo_nombre = grupo.name if grupo else "Invitado"
-    duraciones = ProgramaFormacion.objects.values_list('duracion', flat=True).distinct().order_by('duracion')
-
-    if request.method == "POST":
-        form = OfertaForm(request.POST, request.FILES)
-        if form.is_valid():
-            oferta = form.save(commit=False)
-            oferta.usuario = user
-
-            programa_id = request.POST.get('programa')
-            if programa_id:
-                try:
-                    oferta.programa = ProgramaFormacion.objects.get(id=programa_id)
-                except ProgramaFormacion.DoesNotExist:
-                    messages.error(request, "El programa seleccionado no existe.")
-                    return redirect('ofertas:index')
-
-            try:
-                oferta.estado = Estado.objects.get(id=1)  # Asegúrate de que exista el Estado con ID 1
-            except Estado.DoesNotExist:
-                messages.error(request, "Estado inicial no encontrado.")
-                return redirect('ofertas:index')
-
-            oferta.save()
-            messages.success(request, "¡Solicitud enviada correctamente!")
-            return redirect('ofertas:index')
-        else:
-            messages.error(request, "Hubo un error al enviar la solicitud. Verifica los datos.")
-            print(form.errors.as_json())
-    else:
-        form = OfertaForm()
-
-    # 🔍 MOSTRAR SOLICITUDES SEGÚN EL ROL
-    if grupo_nombre == "Funcionario":
-        solicitudes = Oferta.objects.all().order_by("creado_en")
-    else:
-        solicitudes = Oferta.objects.filter(usuario=user).order_by("creado_en")
-
-    # ✅ SOLO UN RENDER
-    return render(
-        request,
-        'ofertas.html',
-        {
-            'grupo_nombre': grupo_nombre,
-            'css_file': f'css/oferta_{grupo_nombre.lower()}.css',
-            'js_file': f'js/oferta_{grupo_nombre.lower()}.js',
-            'form': form,
-            'duraciones': duraciones,
-            'solicitudes': solicitudes,
-        }
-    )
-
-
 def programas_sugeridos(request):
     duracion = request.GET.get("duracion", "")
 
@@ -187,7 +174,6 @@ def programas_sugeridos(request):
     data = [{"id": p.id, "nombre": p.nombre, "duracion": p.duracion} for p in programas]
     return JsonResponse(data, safe=False)
 
-    
 @login_required
 def solicitudes(request):
     from .models import Oferta, Estado
@@ -234,13 +220,11 @@ def solicitudes(request):
         }
     )
 
-
 @login_required
 def reportes(request):
-    # Contar fichas por tipo (campesena, regular, etc.)
+
     fichas_por_tipo = ProgramaFormacion.objects.values('tipo_programa').annotate(total=Count('id'))
 
-    # Si quieres además totales separados
     campesena = ProgramaFormacion.objects.filter(tipo_programa="campesena").count()
     regular = ProgramaFormacion.objects.filter(tipo_programa="regular").count()
     total = ProgramaFormacion.objects.count()

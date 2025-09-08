@@ -8,13 +8,11 @@ class NivelFormacion(models.Model):
     def __str__(self):
         return self.nombre
 
-
 class RedConocimientos(models.Model):
     nombre = models.CharField(max_length=255)
 
     def __str__(self):
         return self.nombre
-
 
 class LineaTecnologica(models.Model):
     nombre = models.CharField(max_length=255)
@@ -67,7 +65,6 @@ class ProgramaFormacion(models.Model):
     def __str__(self):
         return f"{self.nombre} ({self.tipo_programa})"
 
-
 class Departamento(models.Model):
     nombre= models.CharField(max_length= 255)
 
@@ -94,34 +91,32 @@ class Lugar(models.Model):
     departamento= models.ForeignKey(Departamento, on_delete=models.PROTECT)
     municipio= models.ForeignKey(Municipio, on_delete=models.PROTECT)
     corregimientos= models.ForeignKey(Corregimientos, on_delete=models.PROTECT)
-    direccion= models.CharField(max_length= 255)
     ambiente= models.ForeignKey(Ambiente, on_delete=models.PROTECT)
+    direccion= models.CharField(max_length= 255)
 
 
+#Se eliminó
 class Jornada(models.Model):
     nombre = models.CharField(max_length=80)
 
 
-class Modalidad(models.Model):
+class ModalidadPrograma(models.Model):
     nombre = models.CharField(max_length=28)
 
-
 class Horario(models.Model):
-    jornada= models.ForeignKey(Jornada, on_delete=models.PROTECT)
-    modalidad= models.ForeignKey(Modalidad, on_delete=models.PROTECT)
     hora_inicio= models.TimeField()
     hora_fin= models.TimeField()
 
     def duracion(self):
-        inicio = datetime.combine(datetime.today(), self.hora_inicio)
-        fin = datetime.combine(datetime.today(), self.hora_fin)
-        return fin - inicio  # timedelta
+        inicio= datetime.combine(datetime.today(), self.hora_inicio)
+        fin= datetime.combine(datetime.today(), self.hora_fin)
+        return fin - inicio
 
     def __str__(self):
         return f"{self.hora_inicio} - {self.hora_fin}"
 
 class Dia(models.Model):
-    nombre = models.CharField(max_length=20)
+    nombre= models.CharField(max_length=20)
 
     def __str__(self):
         return self.nombre
@@ -141,18 +136,19 @@ class Estado(models.Model):
 class ProgramaEspecial(models.Model):
     nombre= models.CharField(max_length= 255)
 
+    def __str__(self):
+        return self.nombre
 
 class EmpresaSolicitante(models.Model):
     nit= models.IntegerField()
     nombre= models.CharField(max_length= 255)
     subsector_economico= models.CharField(max_length= 255)
 
-
 class Oferta(models.Model):
     creado_en= models.DateTimeField(auto_now_add=True)
     archivo_cedula_pdf = models.FileField(upload_to='cedulas/', blank=True, null=True)
     actualizado_en= models.DateTimeField(auto_now=True)
-    comentarios = models.TextField(null=True, blank=True)  # 👈 Campo opcional para comentarios
+    comentarios= models.TextField(null=True, blank=True)
     usuario= models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT
@@ -190,6 +186,7 @@ class Oferta(models.Model):
 
 
     programa= models.ForeignKey(ProgramaFormacion, on_delete=models.PROTECT)
+    modalidad_programa= models.ForeignKey(ModalidadPrograma, on_delete= models.PROTECT, blank= True, null= True)
     lugar= models.ForeignKey(Lugar, on_delete=models.PROTECT, null=True, blank=True)
     horario= models.ForeignKey(Horario, on_delete=models.PROTECT, null=True, blank=True)
     estado= models.ForeignKey(Estado, on_delete=models.PROTECT)
