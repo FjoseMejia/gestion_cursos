@@ -37,36 +37,42 @@ class PerfilForm(UserCreationForm):
             'email': forms.EmailInput(attrs={'class': 'form__input', 'placeholder': 'Correo electrónico'}),
         }
 # modi
-from django.contrib.auth.models import Group
-from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
 class InstructorForm(forms.ModelForm):
+    # campo personalizado (singular) — así evitamos el ManyToMany por defecto
     grupo = forms.ModelChoiceField(
-        queryset=Group.objects.none(),  # por defecto vacío
-        required=True,
-        label="Grupo"
+        queryset=Group.objects.none(),
+        required=False,
+        label="Grupo",
+        empty_label="---------"
     )
 
     class Meta:
         model = User
+        # IMPORTANTE: no incluir "groups" aquí
         fields = [
             "username", "first_name", "last_name", "email",
-            "telefono", "numero_identificacion", "area", "is_active",
+            "telefono", "numero_identificacion", "area", "is_active"
         ]
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop("user", None)  # capturamos usuario logueado
+        request_user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
 
-        if user:
-            if user.is_superuser:
-                # 🔹 Superusuario → todos los grupos
-                self.fields["grupo"].queryset = Group.objects.all()
-            elif user.groups.filter(name__in=["Coordinador", "Funcionario"]).exists():
-                # 🔹 Coordinador o Funcionario → solo Instructor
-                self.fields["grupo"].queryset = Group.objects.filter(name="Instructor")
-            else:
-                # 🔹 Otros usuarios → no pueden asignar grupo
-                self.fields["grupo"].queryset = Group.objects.none()
+        # si superuser -> ve todos los grupos
+        if request_user and request_user.is_superuser:
+            self.fields["grupo"].queryset = Group.objects.all()
+
+        # si coordinador o funcionario -> solo Instructor
+        elif request_user and request_user.groups.filter(name__in=["Coordinador", "Funcionario"]).exists():
+            qs = Group.objects.filter(name__iexact="Instructor")
+            self.fields["grupo"].queryset = qs
+            # poner el initial para que se vea seleccionado si solo hay uno
+            if qs.exists():
+                self.fields["grupo"].initial = qs.first()
+
+        # otros -> sin opciones
+        else:
+            self.fields["grupo"].queryset = Group.objects.none()
