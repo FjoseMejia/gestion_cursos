@@ -71,11 +71,9 @@ class ProgramaFormacion(models.Model):
 class Departamento(models.Model):
     nombre= models.CharField(max_length= 255)
 
-
 class Municipio(models.Model):
     nombre= models.CharField(max_length= 255)
     departamento= models.ForeignKey(Departamento, on_delete= models.PROTECT)
-
 
 class Corregimientos(models.Model):
     nombre= models.CharField(max_length=255)
@@ -210,7 +208,7 @@ class Oferta(models.Model):
         if not self.fecha_inicio or not self.programa or not self.horario_dias.exists():
             return None
 
-        # horas semanales (sumando cada día/horario)
+
         horas_semana = sum([
             hd.horario.duracion().total_seconds() / 3600
             for hd in self.horario_dias.all()
@@ -230,10 +228,6 @@ class Oferta(models.Model):
             self.fecha_terminacion = None
         super().save(*args, **kwargs)
 
-
-# ---------------------------
-# Señal para recalcular cuando cambien los M2M
-# ---------------------------
 @receiver(m2m_changed, sender=Oferta.horario_dias.through)
 def actualizar_fecha_terminacion(sender, instance, action, **kwargs):
     if action in ["post_add", "post_remove", "post_clear"]:
