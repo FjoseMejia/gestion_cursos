@@ -3,22 +3,33 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 from .models import ProgramaFormacion, Estado, Oferta
-from ofertas.forms import OfertaForm, InstructorArchivoForm, EstadoComentarioForm, SubirCedulaForm, LugarForm
+from ofertas.forms import OfertaForm, LugarForm
 from django.db.models import Count
+from .utils import generar_ficha
 
+
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from .models import Oferta, ProgramaFormacion, Estado, Horario, HorarioDia
+from .forms import OfertaForm, LugarForm
 
 def index(request):
     user = request.user
     grupo = user.groups.first()
     grupo_nombre = grupo.name if grupo else "Invitado"
-    duraciones = ProgramaFormacion.objects.values_list('duracion', flat=True).distinct().order_by('duracion')
+    duraciones = ProgramaFormacion.objects.values_list(
+        'duracion', flat=True
+    ).distinct().order_by('duracion')
 
     if request.method == "POST":
         form = OfertaForm(request.POST, request.FILES)
-        if form.is_valid():
+        lugar_form = LugarForm(request.POST)
+
+        if form.is_valid() and lugar_form.is_valid():
             oferta = form.save(commit=False)
             oferta.usuario = user
 
+            # programa
             programa_id = request.POST.get('programa')
             if programa_id:
                 try:
@@ -27,78 +38,65 @@ def index(request):
                     messages.error(request, "El programa seleccionado no existe.")
                     return redirect('ofertas:index')
 
+            # estado inicial
             try:
                 oferta.estado = Estado.objects.get(id=1)
             except Estado.DoesNotExist:
                 messages.error(request, "Estado inicial no encontrado.")
                 return redirect('ofertas:index')
 
+            # guardar oferta básica
             oferta.save()
-            messages.success(request, "¡Solicitud enviada correctamente!")
+
+            # === crear horario y asociar días ===
+            hora_inicio = form.cleaned_data.get('hora_inicio')
+            hora_fin = form.cleaned_data.get('hora_fin')
+            dias = form.cleaned_data.get('dias')
+
+            if hora_inicio and hora_fin and dias:
+                horario = Horario.objects.create(
+                    hora_inicio=hora_inicio,
+                    hora_fin=hora_fin
+                )
+                for dia in dias:
+                    hd = HorarioDia.objects.create(dia=dia, horario=horario)
+                    oferta.horario_dias.add(hd)
+
+            # generar documento
+            ruta = generar_ficha(oferta)
+            oferta.archivo = ruta
+            oferta.save()
+
+            messages.success(request, "Solicitud creada y documento generado.")
             return redirect('ofertas:index')
         else:
             messages.error(request, "Hubo un error al enviar la solicitud. Verifica los datos.")
             print(form.errors.as_json())
     else:
-        oferta_form = OfertaForm()
-        lugar_form = LugarForm(request.POST)
+        form = OfertaForm()
+        lugar_form = LugarForm()
 
+    # solicitudes según rol
     if grupo_nombre == "Funcionario":
         solicitudes = Oferta.objects.all().order_by("creado_en")
     else:
         solicitudes = Oferta.objects.filter(usuario=user).order_by("creado_en")
-
 
     return render(
         request,
         'oferta.html',
         {
             'grupo_nombre': grupo_nombre,
-            'css_file': f'css/oferta.css',
-            'js_file': f'js/oferta.js',
-            'form': oferta_form,
+            'css_file': 'css/oferta.css',
+            'js_file': 'js/oferta.js',
+            'form': form,
             'lugar_form': lugar_form,
             'duraciones': duraciones,
             'solicitudes': solicitudes,
         }
     )
 
-@login_required
-def subir_cedula_link(request, oferta_id):
-    oferta = get_object_or_404(Oferta, id=oferta_id)
 
-    if request.method == 'POST':
-        form = SubirCedulaForm(request.POST, request.FILES, instance=oferta)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Archivo de cédulas subido correctamente.")
-            return redirect('ofertas:index')
-        else:
-            messages.error(request, "Error al subir el archivo.")
-    else:
-        form = SubirCedulaForm(instance= oferta)
-
-    return render(request, 'ofertas/subir_cedula_form.html', {'form': form, 'oferta': oferta})
-
-def subir_cedula(request, oferta_id):
-    oferta = get_object_or_404(Oferta, id=oferta_id)
-
-    if request.user != oferta.usuario:
-        messages.error(request, "No tienes permiso para subir archivos a esta oferta.")
-        return redirect('ofertas:solicitud')
-
-    if request.method == 'POST':
-        form = InstructorArchivoForm(request.POST, request.FILES, instance=oferta)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Archivo de cédulas subido correctamente.")
-            return redirect('ofertas:solicitud')
-        else:
-            messages.error(request, "Error al subir el archivo.")
-    else:
-        form = InstructorArchivoForm(instance=oferta)
-
-    return render(request, 'ofertas/subir_cedula.html', {'form': form, 'oferta': oferta})
 
 @login_required
 def editar_estado_comentario(request, oferta_id):
@@ -379,3 +377,5 @@ def exportar_a_excel(request):
     response['Content-Disposition'] = 'attachment; filename="inscripciones.xlsx"'
 
     return response
+
+

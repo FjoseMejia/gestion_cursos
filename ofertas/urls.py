@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import subir_cedula, editar_estado_comentario, subir_cedula_link
+from .views import editar_estado_comentario
 
 app_name= 'ofertas'
 urlpatterns= [
@@ -11,8 +11,6 @@ urlpatterns= [
     path("reportes/crear/", views.crear_reporte, name='crear_reporte'),
     path('api/programas_sugeridos/', views.programas_sugeridos, name='programas_sugeridos'),
     path('cambiar-estado/<int:oferta_id>/<str:accion>/', views.cambiar_estado, name='cambiar_estado'),
-    path('oferta/<int:oferta_id>/subir_cedula/', subir_cedula, name='subir_cedula'),
-    path('oferta/<int:oferta_id>/subir_cedula/', subir_cedula_link, name='subir_cedula'),
-    path('oferta/<int:oferta_id>/editar_estado/', editar_estado_comentario, name='editar_estado_comentario'),
+
 ]
 
