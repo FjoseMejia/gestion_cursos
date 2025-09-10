@@ -113,13 +113,28 @@ def exportar_datos_personales(request):
     response['Content-Disposition'] = 'attachment; filename="datos_personales.xlsx"'
 
     return response
+from .forms import InscripcionForm
+from .models import Inscripcion
 
 def index(request):
-    # Aquí puedes pasar el contexto que necesites, como form, mensaje_cupos, etc.
+    LIMITE_CUPOS = 25
+    total_inscritos = Inscripcion.objects.count()
+
+    if request.method == 'POST':
+        form = InscripcionForm(request.POST)
+        if total_inscritos >= LIMITE_CUPOS:
+            mensaje_cupos = "❌ No existen cupos disponibles para este curso. El límite de 25 inscritos ha sido alcanzado."
+        elif form.is_valid():
+            form.save()
+            return redirect('inscripciones:index')
+    else:
+        form = InscripcionForm()
+        mensaje_cupos = f"✅ Quedan {LIMITE_CUPOS - total_inscritos} cupos disponibles." if total_inscritos < LIMITE_CUPOS else "❌ No existen cupos disponibles para este curso."
+
     return render(request, 'index.html', {
-        'mensaje_cupos': "Ejemplo de mensaje",
-        'total_inscritos': 100,
-        # ... otros contextos que uses en index.html
+        'form': form,
+        'mensaje_cupos': mensaje_cupos,
+        'total_inscritos': total_inscritos
     })
 
 from django.contrib import messages
@@ -130,7 +145,7 @@ def detalle_inscripcion(request, pk):
         inscripcion = Inscripcion.objects.get(pk=pk)
     except Inscripcion.DoesNotExist:
         messages.error(request, f"No se encontró la inscripción con ID {pk}.")
-        return redirect('index')  # Asegúrate de que 'index' esté definido en tus URLs
+        return redirect('inscripciones:index')  # Asegúrate de que 'index' esté definido en tus URLs
 
     return render(request, 'index', {
         'inscripcion': inscripcion
