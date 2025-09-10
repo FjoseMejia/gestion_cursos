@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
 {% block title %}Gestión de Ofertas{% endblock %}
+{% load static %}
 
 {% block content %}
 <div id="requests-view" class="view-container">
@@ -27,38 +28,31 @@
             </div>
         </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Programa</th>
-                    <th>Fecha de creación</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                    <th>Generar link</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for solicitud in solicitudes %}
-                <tr>
-                    <td>{{ solicitud.programa.nombre }}</td>
-                    <td>{{ solicitud.creado_en|date:"Y-m-d H:i" }}</td>
-                    <td>{{ solicitud.estado.nombre }}</td>
-                    <td>
+           <div class="archivos">
+      <div class="archivo" id="word" onclick="cargarArchivo('word')">
+        <i class="fas fa-file-word fa-3x" style="color:#2b579a;"></i>
+        <span>Archivo Word</span>
+        <img src="{% static 'img/icons/word.png' %}" alt="Word">
+      </div>
 
-                    </td>
-                    <td>
-                        <a href="{% url 'inscripciones:detalle_inscripcion' solicitud.id %}" target="_blank">🔗 Ir a inscripción</a>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="5">No has enviado solicitudes.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+      <div class="archivo" id="excel" onclick="cargarArchivo('excel')">
+        <i class="fas fa-file-excel fa-3x" style="color:#217346;"></i>
+        <span>Archivo Excel</span>
+        <img src="{% static 'img/icons/excel.png' %}" alt="Excel">
+      </div>
+
+      <div class="archivo" id="pdf" onclick="cargarArchivo('pdf')">
+        <i class="fas fa-file-pdf fa-3x" style="color:#d93025;"></i>
+        <span>Archivo PDF</span>
+        <img src="{% static 'img/icons/pdf.png' %}" alt="PDF">
+      </div>
     </div>
-</div>
+
+    <div class="acciones">
+      <button class="btn btn-link" onclick="enviarLink()"><i class="fas fa-link"></i> Enviar Link</button>
+      <button class="btn btn-enviar" onclick="enviarArchivos()"><i class="fas fa-paper-plane"></i> Enviar</button>
+    </div>
+  </div>
 <div id="request-modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
