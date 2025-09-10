@@ -20,7 +20,10 @@ def home(request):
     grupo_nombre = grupo.name if grupo else 'Invitado'
 
     if user.is_superuser:
+<<<<<<< HEAD
 
+=======
+>>>>>>> fran/ofertas
         template = role_home_map.get("SuperAdmin")
         return render(
             
@@ -32,12 +35,18 @@ def home(request):
         )
     else:
         template = role_home_map.get(grupo_nombre)
+<<<<<<< HEAD
 
+=======
+>>>>>>> fran/ofertas
         grupo_nombre = 'SuperAdmin'
 
     template = role_home_map.get(grupo_nombre, 'home/home_invitado.html')
     css_filename = f'css/home_{grupo_nombre.lower()}.css'
+<<<<<<< HEAD
 
+=======
+>>>>>>> fran/ofertas
 
     return render(
         request,

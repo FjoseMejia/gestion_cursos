@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.models import Group
 from usuarios.models import Perfil
+from django.contrib.auth.decorators import login_required
 
 def login(request):
     if request.method == "POST":
@@ -42,7 +43,10 @@ class Registro(View):
 
             return render(request, "registro/index.html", {'form': form})
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> fran/ofertas
 
 # Vista para la gestión de instructores -
 def list_user_by_area(request):
@@ -51,7 +55,7 @@ def list_user_by_area(request):
         'username', 'first_name', 'email'
     )
 
-from django.contrib.auth.decorators import login_required
+
 
 @login_required
 def instructores(request):

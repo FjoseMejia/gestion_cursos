@@ -27,6 +27,7 @@ def sidebar_groups(request):
                 "links": [
                     {"url": reverse('ofertas:index'), "icon": "fas fa-tasks", "label": "Ofertas"},
                     {"url": "#", "icon": "fas fa-history", "label": "Histórico"},
+
                 ],
             },
         ],
@@ -34,7 +35,7 @@ def sidebar_groups(request):
             {
                 "category": "Gestión",
                 "links": [
-                    {"url": reverse('ofertas:solicitud'), "icon": "fas fa-inbox", "label": "Solicitudes"},
+                    {"url": reverse('ofertas:solicitudes'), "icon": "fas fa-inbox", "label": "Solicitudes"},
                     {"url": reverse('ofertas:reportes'), "icon": "fas fa-chart-line", "label": "Reportes"},
                     {"url": "#", "icon": "fas fa-book-open", "label": "Programas"},
                     {"url":  reverse('usuarios:instructores'), "icon": "fas fa-chalkboard-teacher", "label": "Instructores"},
@@ -46,6 +47,7 @@ def sidebar_groups(request):
             {
                 "category": "Gestión",
                 "links": [
+                    {"url": reverse('ofertas:solicitudes'), "icon": "fas fa-inbox", "label": "Solicitudes"},
                     {"url": "#", "icon": "fas fa-inbox", "label": "Solicitudes"},
                     {"url":  reverse('usuarios:instructores'), "icon": "fas fa-chalkboard-teacher", "label": "Instructores"},
                 ]
