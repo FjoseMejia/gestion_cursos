@@ -1,15 +1,5 @@
 from django.contrib.auth.decorators import login_required
-<<<<<<< HEAD
-from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
-from .models import ProgramaFormacion
-from ofertas.forms import OfertaForm
-from django.db.models import Count
-from django.shortcuts import redirect
-from openpyxl import Workbook
-import io
-from.models import  Oferta
-=======
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
@@ -17,9 +7,6 @@ from .models import ProgramaFormacion, Estado, Oferta
 from ofertas.forms import OfertaForm, LugarForm
 from django.db.models import Count
 from .utils import generar_ficha
->>>>>>> fran/ofertas
-
-
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from .models import Oferta, ProgramaFormacion, Estado, Horario, HorarioDia
@@ -29,9 +16,6 @@ def index(request):
     user = request.user
     grupo = user.groups.first()
     grupo_nombre = grupo.name if grupo else "Invitado"
-<<<<<<< HEAD
-    form = OfertaForm()
-=======
     duraciones = ProgramaFormacion.objects.values_list(
         'duracion', flat=True
     ).distinct().order_by('duracion')
@@ -96,25 +80,21 @@ def index(request):
         solicitudes = Oferta.objects.all().order_by("creado_en")
     else:
         solicitudes = Oferta.objects.filter(usuario=user).order_by("creado_en")
->>>>>>> fran/ofertas
+
 
     return render(
         request,
         'oferta.html',
         {
             'grupo_nombre': grupo_nombre,
-<<<<<<< HEAD
-            'css_file': f'css/oferta_{grupo_nombre.lower()}.css',
-            'js_file': f'js/oferta_{grupo_nombre.lower()}.js',
-            'form': form
-=======
+
             'css_file': 'css/oferta.css',
             'js_file': 'js/oferta.js',
             'form': form,
             'lugar_form': lugar_form,
             'duraciones': duraciones,
             'solicitudes': solicitudes,
->>>>>>> fran/ofertas
+
         }
     )
 

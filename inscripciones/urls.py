@@ -7,9 +7,7 @@ from . import views
 app_name = 'inscripciones'
 
 urlpatterns = [
-<<<<<<< HEAD
-   
-=======
+
     # Todos los patrones de URL deben estar en una sola lista
     path('', views.inscripcion_formulario, name='index'),
     path('admin/', admin.site.urls),
@@ -18,7 +16,6 @@ urlpatterns = [
     path('incripciones/', views.inscripcion_formulario, name='inscripciones'),
     path('', views.index, name='index'),
     path('detalle/<int:pk>/', views.detalle_inscripcion, name='detalle_inscripcion'),
->>>>>>> fran/ofertas
 
     # La URL para exportar el archivo de Excel
     #path('exportar-excel/', views.exportar_a_excel, name='exportar_excel'),#

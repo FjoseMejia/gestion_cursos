@@ -43,10 +43,6 @@ class Registro(View):
 
             return render(request, "registro/index.html", {'form': form})
 
-<<<<<<< HEAD
-
-=======
->>>>>>> fran/ofertas
 
 # Vista para la gestión de instructores -
 def list_user_by_area(request):
