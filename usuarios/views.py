@@ -61,6 +61,7 @@ def list_user_by_area(request):
     )
 
 
+
 @login_required
 def instructores(request):
     user = request.user
