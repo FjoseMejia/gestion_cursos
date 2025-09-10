@@ -382,4 +382,14 @@ def exportar_a_excel(request):
 
     return response
 
+def solicitudes (request):
+    return render(
+            request,
+            'solicitudes/solicitudes.html',
+            {
+                
+                'css_file': 'solicitudes/css/solicitudes.css',
+                'js_file': 'solicitudes/js/solicitudes.js',
+            }
+    )
 

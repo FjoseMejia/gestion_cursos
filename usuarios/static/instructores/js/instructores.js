@@ -1,34 +1,80 @@
-// Acomodar el JS para la vista de Instructores _david
-// Esperar a que cargue la página
-document.addEventListener("DOMContentLoaded", function() {
-    console.log("JS de Instructor cargado correctamente ✅");
 
-    // Cambiar el color del título <h1> dinámicamente
-    const titulo = document.querySelector("h1");
-    if (titulo) {
-        titulo.style.color = "#022549"; // azul
-    }
 
-    // Si tienes un formulario, podrías validar campos
-    const form = document.querySelector("form");
-    if (form) {
-        form.addEventListener("submit", function(e) {
-            const inputs = form.querySelectorAll("input[required]");
-            let valido = true;
-
-            inputs.forEach(input => {
-                if (!input.value.trim()) {
-                    valido = false;
-                    input.style.border = "2px solid red";
-                } else {
-                    input.style.border = "1px solid #d1d5db";
-                }
-            });
-
-            if (!valido) {
-                e.preventDefault();
-                alert("Por favor completa todos los campos obligatorios.");
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + "=")) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
             }
-        });
+        }
     }
-});
+    return cookieValue;
+}
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + "=")) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function toggleEstado(id) {
+    if (!id) {
+        console.error("toggleEstado: id inválido", id);
+        alert("Error: id inválido.");
+        return;
+    }
+
+    const url = `/usuarios/instructores/activar/${id}/`;
+    const csrftoken = getCookie("csrftoken");
+    console.log("toggleEstado ->", url, "csrftoken:", csrftoken);
+
+    fetch(url, {
+        method: "POST",
+        credentials: "same-origin",              // asegura enviar cookies
+        headers: {
+            "X-CSRFToken": csrftoken,
+            "Accept": "application/json"
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            // muestra texto del servidor para mejores pistas
+            return response.text().then(text => {
+                throw new Error(`HTTP ${response.status} — ${text}`);
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (!data.success) throw new Error(data.error || "Respuesta sin success=true");
+
+        const btn = document.getElementById(`btn-estado-${id}`);
+        const estadoTd = document.getElementById(`estado-${id}`);
+
+        if (data.new_status) {
+            btn.innerHTML = "🚫";
+            btn.title = "Desactivar";
+            estadoTd.innerHTML = `<span class="estado activo">Activo ✓</span>`;
+        } else {
+            btn.innerHTML = "✅";
+            btn.title = "Activar";
+            estadoTd.innerHTML = `<span class="estado inactivo">Inactivo ✗</span>`;
+        }
+    })
+    .catch(err => {
+        console.error("toggleEstado error:", err);
+        alert("No se pudo cambiar el estado. Revisa la consola (Network/Console) para más detalles.");
+    });
+}
