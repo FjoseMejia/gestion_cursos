@@ -7,6 +7,7 @@ from . import views
 app_name = 'inscripciones'
 
 urlpatterns = [
+
     # Todos los patrones de URL deben estar en una sola lista
     path('', views.index, name='index'),
     path('exportar-excel/', views.exportar_a_excel, name='exportar_excel') ,

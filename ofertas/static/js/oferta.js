@@ -1,7 +1,5 @@
-
 document.addEventListener("DOMContentLoaded", () => {
   const log = (...args) => console.info("[ofertas.js]", ...args);
-
 
   function showModal(modalId) {
     const modal = document.getElementById(modalId);
@@ -18,17 +16,15 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.style.overflow = "";
   }
 
-
   const newRequestBtn = document.getElementById("new-request-btn");
   if (newRequestBtn) {
     newRequestBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      showModal("request-modal"); // asegúrate que tu modal tiene id="request-modal"
+      showModal("request-modal");
     });
   } else {
     log("new-request-btn no existe (ok si no usas botón fuera del modal)");
   }
-
 
   document.querySelectorAll(".close").forEach(closeBtn => {
     closeBtn.addEventListener("click", () => {
@@ -40,7 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
-
 
   const cancelBtn = document.getElementById("cancel-request");
   if (cancelBtn) {
@@ -91,24 +86,23 @@ document.addEventListener("DOMContentLoaded", () => {
     log("selector-duracion o selector-cursos no encontrados (skip fetch).");
   }
 
-
   const tipoOferta = document.getElementById("id_tipo_oferta");
-  const camposEmpresaIds = ["id_empresa_nit", "id_empresa_nombre", "id_empresa_subsector", "id_archivo"];
-  const camposEmpresa = camposEmpresaIds.map(id => document.getElementById(id)).filter(Boolean);
 
-function actualizarCamposEmpresa() {
+  function actualizarCamposEmpresa() {
     if (!tipoOferta) return;
     const mostrar = tipoOferta.value === "CERRADA";
-    const collapsible = document.querySelector('.ocultar'); // todo el bloque
+    const collapsible = document.querySelector('.ocultar');
 
     if (collapsible) {
-        collapsible.style.display = mostrar ? "" : "none";
+      collapsible.style.display = mostrar ? "" : "none";
     }
-}
+  }
+  if (tipoOferta) {
+    actualizarCamposEmpresa();
+    tipoOferta.addEventListener('change', actualizarCamposEmpresa);
+  }
 
-tipoOferta.addEventListener('change', actualizarCamposEmpresa);
-
-  /* ===== Collapsibles (abrir/cerrar) ===== */
+  /* ===== Collapsibles tipo acordeón ===== */
   document.querySelectorAll(".collapsible").forEach((collapsible, index) => {
     const header = collapsible.querySelector(".collapsible-header");
     const body = collapsible.querySelector(".collapsible-body");
@@ -125,17 +119,70 @@ tipoOferta.addEventListener('change', actualizarCamposEmpresa);
     }
 
     header.addEventListener("click", () => {
+      // cerrar todos los demás
+      document.querySelectorAll(".collapsible").forEach(other => {
+        if (other !== collapsible) {
+          other.classList.remove("active");
+          const otherBody = other.querySelector(".collapsible-body");
+          if (otherBody) {
+            otherBody.style.maxHeight = null;
+            otherBody.style.display = "none";
+          }
+        }
+      });
+
+      // alternar este
       const isActive = collapsible.classList.toggle("active");
       if (isActive) {
         body.style.display = "block";
-        const h = body.scrollHeight;
-        body.style.maxHeight = h + "px";
+        body.style.maxHeight = body.scrollHeight + "px";
       } else {
         body.style.maxHeight = null;
-
         setTimeout(() => { body.style.display = "none"; }, 300);
       }
     });
   });
 
 });
+
+  /* ===== Abrir collapsible si hay campos inválidos ===== */
+  const form = document.querySelector("#request-modal form");
+  if (form) {
+    form.addEventListener("submit", (e) => {
+      if (!form.checkValidity()) {
+        e.preventDefault(); // evita envío hasta corregir
+
+        const firstInvalid = form.querySelector(":invalid");
+        if (firstInvalid) {
+          // busca el collapsible que contiene el input
+          const collapsible = firstInvalid.closest(".collapsible");
+          if (collapsible) {
+            const header = collapsible.querySelector(".collapsible-header");
+            const body = collapsible.querySelector(".collapsible-body");
+
+            // cerrar los demás
+            document.querySelectorAll(".collapsible").forEach(other => {
+              if (other !== collapsible) {
+                other.classList.remove("active");
+                const otherBody = other.querySelector(".collapsible-body");
+                if (otherBody) {
+                  otherBody.style.maxHeight = null;
+                  otherBody.style.display = "none";
+                }
+              }
+            });
+
+            // abrir el que contiene el error
+            collapsible.classList.add("active");
+            if (body) {
+              body.style.display = "block";
+              body.style.maxHeight = body.scrollHeight + "px";
+            }
+
+            // mover el foco al campo inválido
+            firstInvalid.focus();
+          }
+        }
+      }
+    });
+ }

@@ -1,62 +1,22 @@
-# =========================
-# Archivos compilados de Python
-# =========================
+# Python
 __pycache__/
 *.py[cod]
-*.so
-*.egg
-*.egg-info/
-dist/
-build/
+*.pyo
+*.pyd
 
-# =========================
-# Entornos virtuales
-# =========================
+# Virtual env
 venv/
-env/
-ENV/
-.venv/
+.env/
+*.env
 
-# =========================
-# Archivos de configuración local
-# =========================
+# Django
 *.sqlite3
 *.log
-*.pot
-*.pyc
-*.pyo
 
-# Archivos de configuración de Django
-local_settings.py
-db.sqlite3
-
-# =========================
-# Archivos de IDEs
-# =========================
+# IDEs
 .idea/
 .vscode/
-*.swp
 
-# =========================
 # Archivos de sistema
-# =========================
 .DS_Store
 Thumbs.db
-
-# =========================
-# Archivos temporales
-# =========================
-*.tmp
-*.bak
-*.orig
-*.coverage
-.coverage.*
-htmlcov/
-.cache/
-pytest_cache/
-
-
-__pycache__/
-*.pyc
-*.pyo
-

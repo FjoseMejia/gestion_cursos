@@ -1,31 +1,6 @@
 from django import forms
-from .models import Oferta, Lugar, Horario, EmpresaSolicitante, ProgramaFormacion, Dia
+from .models import Oferta, Lugar, Horario, EmpresaSolicitante, ProgramaFormacion, Dia, HorarioDia
 
-
-#No olvidar modificarlas
-class SubirCedulaForm(forms.ModelForm):
-    class Meta:
-        model = Oferta
-        fields = ['archivo_cedula_pdf']
-        labels = {
-            'archivo_cedula_pdf': 'Subir archivo de cédulas (PDF)',
-        }
-
-class InstructorArchivoForm(forms.ModelForm):
-    class Meta:
-        model = Oferta
-        fields = ['archivo_cedula_pdf']
-        widgets = {
-            'archivo_cedula_pdf': forms.ClearableFileInput(attrs={'accept': 'application/pdf'})
-        }
-
-class EstadoComentarioForm(forms.ModelForm):
-    class Meta:
-        model = Oferta
-        fields = ['estado', 'comentarios']
-        widgets = {
-            'comentarios': forms.Textarea(attrs={'rows': 3}),
-        }
 
 class LugarForm(forms.ModelForm):
     class Meta:
@@ -37,13 +12,13 @@ class LugarForm(forms.ModelForm):
 
 
 class OfertaForm(forms.ModelForm):
-    #Ubicación
-    lugar= forms.CharField(
+    # Ubicación
+    lugar = forms.CharField(
         required=False,
         widget=forms.TextInput(attrs={'class': 'form__input', 'placeholder': 'Lugar'})
     )
 
-    #Horarios
+    # Horarios
     hora_inicio = forms.TimeField(
         required=True,
         widget=forms.TimeInput(attrs={'type': 'time', 'class': 'form__input'})
@@ -61,27 +36,26 @@ class OfertaForm(forms.ModelForm):
         label="Días de la semana"
     )
 
-    #Datos de la empresa
-    empresa_nombre= forms.CharField(
+    # Datos de la empresa
+    empresa_nombre = forms.CharField(
         required=False,
         widget=forms.TextInput(attrs={'class': 'form__input', 'placeholder': 'Nombre de la empresa'})
     )
-    empresa_nit= forms.IntegerField(
+    empresa_nit = forms.IntegerField(
         required=False,
         widget=forms.NumberInput(attrs={'class': 'form__input', 'placeholder': 'NIT'})
     )
-    empresa_subsector= forms.CharField(
+    empresa_subsector = forms.CharField(
         required=False,
         widget=forms.TextInput(attrs={'class': 'form__input', 'placeholder': 'Subsector económico'})
     )
 
-    programa= forms.ModelChoiceField(
-        queryset= ProgramaFormacion.objects.all(),
+    programa = forms.ModelChoiceField(
+        queryset=ProgramaFormacion.objects.all(),
         required=True,
         label="Curso",
         widget=forms.Select(attrs={'id': 'selector-cursos', 'class': 'form__input'})
     )
-
 
     class Meta:
         model = Oferta
@@ -89,7 +63,7 @@ class OfertaForm(forms.ModelForm):
             'modalidad_oferta', 'tipo_oferta', 'entorno_geografico',
             'programa', 'cupo', 'empresa_solicitante',
             'programa_especial',
-            'fecha_inicio', 'fecha_de_inscripcion',  'archivo',
+            'fecha_inicio', 'fecha_de_inscripcion', 'fecha_terminacion', 'archivo',
         ]
 
         widgets = {
@@ -101,18 +75,7 @@ class OfertaForm(forms.ModelForm):
             'ficha': forms.TextInput(attrs={'class': 'form__input', 'placeholder': 'Ficha'}),
             'fecha_inicio': forms.DateInput(attrs={'type': 'date', 'class': 'form__input'}),
             'fecha_de_inscripcion': forms.DateInput(attrs={'type': 'date', 'class': 'form__input'}),
-
         }
-
-    def clean_horario(self):
-        nombre = self.cleaned_data.get('horario')
-        if nombre:
-            horario_obj, _ = Horario.objects.get_or_create(
-                hora_inicio="08:00",
-                hora_fin="12:00",
-            )
-            return horario_obj
-        return None
 
     def clean(self):
         cleaned = super().clean()
@@ -122,16 +85,14 @@ class OfertaForm(forms.ModelForm):
         if inicio and fin and inicio >= fin:
             self.add_error('hora_fin', 'La hora fin debe ser posterior a la hora inicio.')
 
-
-        #Empresa
-        cleaned_data = super().clean()
-        tipo = cleaned_data.get("tipo_oferta")
+        # Empresa
+        tipo = cleaned.get("tipo_oferta")
         if tipo == "CERRADA":
-            if not cleaned_data.get("empresa_nombre"):
+            if not cleaned.get("empresa_nombre"):
                 self.add_error("empresa_nombre", "El nombre de la empresa es obligatorio en oferta cerrada.")
-            if not cleaned_data.get("empresa_nit"):
+            if not cleaned.get("empresa_nit"):
                 self.add_error("empresa_nit", "El NIT es obligatorio en oferta cerrada.")
-        return cleaned_data
+        return cleaned
 
     def save(self, commit=True):
         instance = super().save(commit=False)
@@ -165,5 +126,14 @@ class OfertaForm(forms.ModelForm):
 
         if commit:
             instance.save()
-        return instance
 
+            # DIAS → crear relación HorarioDia
+            dias = self.cleaned_data.get("dias")
+            if dias and horario_obj:
+                for dia in dias:
+                    HorarioDia.objects.get_or_create(
+                        dia=dia,
+                        horario=horario_obj
+                    )
+
+        return instance

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ProgramaEspecial, ModalidadPrograma, Oferta
+from .models import ProgramaEspecial, ModalidadPrograma, Oferta, Dia
 
 @admin.register(Oferta)
 class OfertaAdmin(admin.ModelAdmin):
@@ -14,3 +14,7 @@ class ProgramaEspecialAdmin(admin.ModelAdmin):
 @admin.register(ModalidadPrograma)
 class ModalidadProgramaAdmin(admin.ModelAdmin):
     list_display = ("id", "nombre")
+
+@admin.register(Dia)
+class DiaAdmin(admin.ModelAdmin):
+    list_display= ('id', 'nombre')

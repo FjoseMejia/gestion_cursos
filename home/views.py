@@ -20,6 +20,8 @@ def home(request):
     grupo_nombre = grupo.name if grupo else 'Invitado'
 
     if user.is_superuser:
+
+
         template = role_home_map.get("SuperAdmin")
         return render(
             
@@ -31,6 +33,8 @@ def home(request):
         )
     else:
         template = role_home_map.get(grupo_nombre)
+
+
         grupo_nombre = 'SuperAdmin'
 
     template = role_home_map.get(grupo_nombre, 'home/home_invitado.html')
