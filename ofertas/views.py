@@ -44,26 +44,26 @@ def programas_sugeridos(request):
     data = [{"id": p.id, "nombre": p.nombre, "duracion": p.duracion} for p in programas]
     return JsonResponse(data, safe=False)
 
-@login_required
-def solicitudes(request):
-    # from .models import Solicitud
-    # total = Solicitud.objects.count()
-    # aprobadas = Solicitud.objects.filter(estado="aprobada").count()
-    # pendientes = Solicitud.objects.filter(estado="pendiente").count()
-    # rechazadas = Solicitud.objects.filter(estado="rechazada").count()
-    # ultimas = Solicitud.objects.order_by('-fecha')[:5]
-    return render(
-        request,
-        "solicitud.html",
-        # {
-        #     "total": total,
-        #     "aprobadas": aprobadas,
-        #     "pendientes": pendientes,
-        #     "rechazadas": rechazadas,
-        #     "ultimas": ultimas,
-        #     'css_file': 'css/solicitudes/funcionario.css'  # Si tienes un CSS específico, si no puedes quitar esta línea
-        # }
-    )
+# @login_required   cambioo
+# def solicitudes(request):
+#     # from .models import Solicitud
+#     # total = Solicitud.objects.count()
+#     # aprobadas = Solicitud.objects.filter(estado="aprobada").count()
+#     # pendientes = Solicitud.objects.filter(estado="pendiente").count()
+#     # rechazadas = Solicitud.objects.filter(estado="rechazada").count()
+#     # ultimas = Solicitud.objects.order_by('-fecha')[:5]
+#     return render(
+#         request,
+#         "solicitud.html",
+#         # {
+#         #     "total": total,
+#         #     "aprobadas": aprobadas,
+#         #     "pendientes": pendientes,
+#         #     "rechazadas": rechazadas,
+#         #     "ultimas": ultimas,
+#         #     'css_file': 'css/solicitudes/funcionario.css'  # Si tienes un CSS específico, si no puedes quitar esta línea
+#         # }
+#     )
 
 
 @login_required
@@ -139,3 +139,14 @@ def exportar_a_excel(request):
     response['Content-Disposition'] = 'attachment; filename="inscripciones.xlsx"'
 
     return response
+
+def solicitudes (request):
+    return render(
+            request,
+            'solicitudes/solicitudes.html',
+            {
+                
+                'css_file': 'solicitudes/css/solicitudes.css',
+                'js_file': 'solicitudes/js/solicitudes.js',
+            }
+    )

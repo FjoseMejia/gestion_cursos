@@ -13,3 +13,4 @@ urlpatterns = [
     path("instructores/activar/<int:id>/", views.activar_instructor, name="activar_instructor"),
     
 ]
+

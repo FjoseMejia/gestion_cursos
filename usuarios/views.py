@@ -51,6 +51,8 @@ class Registro(View):
 
 
 
+
+
 # Vista para la gestión de instructores -
 def list_user_by_area(request):
     area_user= request.user.area.nombre
@@ -127,12 +129,6 @@ def instructores(request):
 # BOTON NUEVO USUARIO
 
 
-
-from django.shortcuts import render, redirect
-from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group
-from .forms import InstructorForm
-
 User = get_user_model()
 
 def crear_instructor(request):
@@ -171,18 +167,6 @@ def crear_instructor(request):
         }
     )
 
-
-
-# # editar 
-# from django.shortcuts import render, get_object_or_404, redirect
-# from .models import Perfil  # ajusta si tu modelo se llama diferente
-
-# def editar_instructor(request, id):
-#     instructor = get_object_or_404(Perfil, id=id)
-#     return render(request, "editar_instructor.html", {"instructor": instructor})
-
-
-# activar
 
 
 @csrf_exempt  # ⚠️ si usas fetch con CSRF, puedes quitar esto y pasar el token

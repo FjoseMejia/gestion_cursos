@@ -80,3 +80,17 @@ document.addEventListener("DOMContentLoaded", () => {
     tipoOferta.addEventListener("change", actualizarCamposEmpresa);
 
 });
+
+
+function cargarArchivo(tipo) {
+  const div = document.getElementById(tipo);
+  div.classList.add("cargado");
+}
+
+function enviarLink() {
+  alert("📎 Linck enviado a el Rolo!!.");
+}
+
+function enviarArchivos() {
+  alert("✅ Archivos enviados correctamente.");
+}
