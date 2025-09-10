@@ -10,7 +10,7 @@ urlpatterns = [
     # Todos los patrones de URL deben estar en una sola lista
     path('', views.inscripcion_formulario, name='index'),
     path('admin/', admin.site.urls),
-    path('exportar-excel/', views.exportar_a_excel, name='exportar_excel'),
+    path('exportar-excel/', views.exportar_a_excel, name='exportar_excel') ,
     path('exportar-personales/', views.exportar_datos_personales, name='exportar_personales'),
     path('incripciones/', views.inscripcion_formulario, name='inscripciones'),
     path('', views.index, name='index'),
