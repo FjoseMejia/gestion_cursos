@@ -97,7 +97,6 @@ def index(request):
     )
 
 
-
 @login_required
 def editar_estado_comentario(request, oferta_id):
     oferta = get_object_or_404(Oferta, id=oferta_id)

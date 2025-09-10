@@ -27,6 +27,7 @@ def sidebar_groups(request):
                 "links": [
                     {"url": reverse('ofertas:index'), "icon": "fas fa-tasks", "label": "Ofertas"},
                     {"url": "#", "icon": "fas fa-history", "label": "Histórico"},
+
                 ],
             },
         ],
