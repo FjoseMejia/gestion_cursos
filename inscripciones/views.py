@@ -122,8 +122,16 @@ def index(request):
         # ... otros contextos que uses en index.html
     })
 
+from django.contrib import messages
+from inscripciones.models import Inscripcion
+
 def detalle_inscripcion(request, pk):
-    inscripcion = get_object_or_404(Inscripcion, pk=pk)
-    return render(request, 'index.html', {
+    try:
+        inscripcion = Inscripcion.objects.get(pk=pk)
+    except Inscripcion.DoesNotExist:
+        messages.error(request, f"No se encontró la inscripción con ID {pk}.")
+        return redirect('index')  # Asegúrate de que 'index' esté definido en tus URLs
+
+    return render(request, 'index', {
         'inscripcion': inscripcion
     })
