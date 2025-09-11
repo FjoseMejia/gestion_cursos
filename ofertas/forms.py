@@ -1,5 +1,6 @@
-from django import forms
 from .models import Oferta, Lugar, Horario, EmpresaSolicitante, ProgramaFormacion, Dia, HorarioDia
+from datetime import date
+from django import forms
 
 
 class LugarForm(forms.ModelForm):
@@ -7,7 +8,12 @@ class LugarForm(forms.ModelForm):
         model = Lugar
         fields = ["departamento", "municipio", "corregimientos", "direccion", "ambiente"]
         widgets = {
-            "direccion": forms.TextInput(attrs={"placeholder": "Ej: Calle 12 #3-47"}),
+            "direccion": forms.TextInput(
+                attrs={"placeholder": "Ej: Calle 12 #3-47", "class": "form__input"}
+            ),
+            "ambiente": forms.TextInput(
+                attrs={"placeholder": "Ej: Ambiente 301", "class": "form__input"}
+            ),
         }
 
 
@@ -29,7 +35,7 @@ class OfertaForm(forms.ModelForm):
         widget=forms.TimeInput(attrs={'type': 'time', 'class': 'form__input'})
     )
 
-    dias = forms.ModelMultipleChoiceField(
+    dias= forms.ModelMultipleChoiceField(
         queryset=Dia.objects.all(),
         widget=forms.CheckboxSelectMultiple,
         required=True,
@@ -50,7 +56,7 @@ class OfertaForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class': 'form__input', 'placeholder': 'Subsector económico'})
     )
 
-    programa = forms.ModelChoiceField(
+    programa= forms.ModelChoiceField(
         queryset=ProgramaFormacion.objects.all(),
         required=True,
         label="Curso",
@@ -66,15 +72,31 @@ class OfertaForm(forms.ModelForm):
             'fecha_inicio', 'fecha_de_inscripcion', 'fecha_terminacion', 'archivo',
         ]
 
+
         widgets = {
             'modalidad_oferta': forms.Select(),
             'tipo_oferta': forms.Select(),
             'entorno_geografico': forms.Select(),
-            'cupo': forms.NumberInput(attrs={'class': 'form__input', 'placeholder': 'Cupo', 'min': 1}),
+            'cupo': forms.NumberInput(attrs={
+                'class': 'form__input',
+                'placeholder': 'Cupo',
+                'min': 1
+            }),
             'programa_especial': forms.Select(),
-            'ficha': forms.TextInput(attrs={'class': 'form__input', 'placeholder': 'Ficha'}),
-            'fecha_inicio': forms.DateInput(attrs={'type': 'date', 'class': 'form__input'}),
-            'fecha_de_inscripcion': forms.DateInput(attrs={'type': 'date', 'class': 'form__input'}),
+            'ficha': forms.TextInput(attrs={
+                'class': 'form__input',
+                'placeholder': 'Ficha'
+            }),
+            'fecha_inicio': forms.DateInput(attrs={
+                'type': 'date',
+                'class': 'form__input',
+                'min': date.today().strftime("%Y-%m-%d")
+            }),
+            'fecha_de_inscripcion': forms.DateInput(attrs={
+                'type': 'date',
+                'class': 'form__input',
+                'min': date.today().strftime("%Y-%m-%d")
+            }),
         }
 
     def clean(self):
@@ -127,7 +149,6 @@ class OfertaForm(forms.ModelForm):
         if commit:
             instance.save()
 
-            # DIAS → crear relación HorarioDia
             dias = self.cleaned_data.get("dias")
             if dias and horario_obj:
                 for dia in dias:

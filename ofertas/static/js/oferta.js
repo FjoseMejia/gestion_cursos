@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-  /* ===== Abrir collapsible si hay campos inválidos ===== */
+
   const form = document.querySelector("#request-modal form");
   if (form) {
     form.addEventListener("submit", (e) => {
