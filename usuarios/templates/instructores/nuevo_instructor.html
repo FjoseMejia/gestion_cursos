@@ -2,45 +2,65 @@
 {% load static %}
 
 {% block content %}
-<div class="nuevo-instructor-page">
-    <div class="form-container">
-        <h1>Nuevo Instructor</h1>
-        <form method="post">
-            {% csrf_token %}
+<div class="content">
+    <div class="nuevo-instructor-page">
+        <div class="form-container">
+            <h1>Nuevo Instructor</h1>
+            <form method="post">
+                {% csrf_token %}
 
-            <label for="id_username">Usuario:</label>
-            {{ form.username }}
+                <div class="form-grid">
+                    <div>
+                        <label for="id_username">Usuario:</label>
+                        {{ form.username }}
+                    </div>
+                    <div>
+                        <label for="id_first_name">Nombres:</label>
+                        {{ form.first_name }}
+                    </div>
 
-            <label for="id_first_name">Nombres:</label>
-            {{ form.first_name }}
+                    <div>
+                        <label for="id_last_name">Apellidos:</label>
+                        {{ form.last_name }}
+                    </div>
+                    <div>
+                        <label for="id_email">Correo:</label>
+                        {{ form.email }}
+                    </div>
 
-            <label for="id_last_name">Apellidos:</label>
-            {{ form.last_name }}
+                    <div>
+                        <label for="id_telefono">Teléfono:</label>
+                        {{ form.telefono }}
+                    </div>
+                    <div>
+                        <label for="id_numero_identificacion">Número de Identificación:</label>
+                        {{ form.numero_identificacion }}
+                    </div>
 
-            <label for="id_email">Correo:</label>
-            {{ form.email }}
+                    {% if form.grupo %}
+                    <div>
+                        <label for="{{ form.grupo.id_for_label }}">Grupo:</label>
+                        {{ form.grupo }}
+                    </div>
+                    {% endif %}
 
-            <label for="id_telefono">Teléfono:</label>
-            {{ form.telefono }}
+                    <div>
+                        <label for="id_area">Área:</label>
+                        {{ form.area }}
+                    </div>
 
-            <label for="id_numero_identificacion">Número de Identificación:</label>
-            {{ form.numero_identificacion }}
+                    <div class="full-row">
+                        <label for="id_is_active">Activo:</label>
+                        {{ form.is_active }}
+                    </div>
+                </div>
 
-            {# mostramos el campo solo si existe en el formulario #}
-            {% if form.grupo %}
-                <label for="{{ form.grupo.id_for_label }}">Grupo:</label>
-                {{ form.grupo }}
-            {% endif %}
-
-            <label for="id_area">Área:</label>
-            {{ form.area }}
-
-            <label for="id_is_active">Activo:</label>
-            {{ form.is_active }}
-
-            <button type="submit" class="btn-guardar">Guardar</button>
-            <a href="{% url 'usuarios:instructores' %}" class="btn-cancelar">Cancelar</a>
-        </form>
+                <div class="form-buttons">
+                    <button type="submit" class="btn-guardar">Guardar</button>
+                    <a href="{% url 'usuarios:instructores' %}" class="btn-cancelar">Cancelar</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}

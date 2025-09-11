@@ -26,7 +26,6 @@ def sidebar_groups(request):
                 "category": "Gestión",
                 "links": [
                     {"url": reverse('ofertas:index'), "icon": "fas fa-tasks", "label": "Ofertas"},
-                    {"url": "#", "icon": "fas fa-history", "label": "Histórico"},
                     {"url": reverse('ofertas:solicitudes'), "icon": "fas fa-envelope-open-text", "label": "Solicitudes"},
                 ],
             },
