@@ -65,6 +65,9 @@ def index(request):
         else:
             messages.error(request, "Hubo un error al enviar la solicitud. Verifica los datos.")
             print(form.errors.as_json())
+            print("ERRORES DEL FORMULARIO:")
+            print(form.errors.as_data())
+            print(lugar_form.errors)
     else:
         form = OfertaForm()
         lugar_form = LugarForm()

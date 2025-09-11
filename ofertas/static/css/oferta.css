@@ -474,3 +474,27 @@ table th {
     cursor: pointer;
     font-size: 20px;
   }
+
+
+/* Contenedor de las horas */
+.horas-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap; /* se acomodan en móviles */
+    margin-top: 10px;
+}
+
+/* Cada form-group de hora */
+.horas-container .form-group {
+    flex: 1; /* ocupan espacio parejo */
+    min-width: 180px; /* no se encogen demasiado */
+}
+
+/* Inputs de hora */
+.horas-container input[type="time"] {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
