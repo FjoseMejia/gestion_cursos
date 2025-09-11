@@ -94,7 +94,6 @@ def index(request):
             'lugar_form': lugar_form,
             'duraciones': duraciones,
             'solicitudes': solicitudes,
-
         }
     )
 
