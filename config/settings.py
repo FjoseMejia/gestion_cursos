@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'home.apps.HomeConfig',
     'ofertas.apps.OfertasConfig',
     'inscripciones.apps.InscripcionesConfig',
+    'smart_selects',
 ]
 
 MIDDLEWARE = [
@@ -118,6 +119,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
+USE_DJANGO_JQUERY = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'usuarios.Perfil'

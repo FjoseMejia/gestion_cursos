@@ -1,10 +1,6 @@
 from django.contrib.auth.decorators import login_required
-
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, JsonResponse
-from django.contrib import messages
-from .models import ProgramaFormacion, Estado, Oferta
-from ofertas.forms import OfertaForm, LugarForm
 from django.db.models import Count
 from .utils import generar_ficha
 from django.contrib import messages
@@ -44,10 +40,8 @@ def index(request):
                 messages.error(request, "Estado inicial no encontrado.")
                 return redirect('ofertas:index')
 
-            # guardar oferta básica
             oferta.save()
 
-            # === crear horario y asociar días ===
             hora_inicio = form.cleaned_data.get('hora_inicio')
             hora_fin = form.cleaned_data.get('hora_fin')
             dias = form.cleaned_data.get('dias')
