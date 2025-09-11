@@ -332,3 +332,145 @@ table th {
 .dia-item input[type="checkbox"] {
   margin-bottom: 4px;
 }
+.content {
+  padding: 30px;
+}
+
+.card {
+  background: #fff;
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+
+.card h2 {
+  margin-bottom: 25px;
+  color: #001f54;
+}
+
+.archivos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  margin-bottom: 30px;
+}
+
+.archivo {
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  background: #fafafa;
+  text-align: center;
+}
+
+.archivo:hover {
+  border-color: #003f88;
+  background: #f0f8ff;
+  transform: translateY(-3px);
+}
+
+.archivo img {
+  width: 65px;
+  display: none;
+}
+
+.archivo span {
+  font-size: 15px;
+  color: #666;
+  margin-top: 10px;
+}
+
+.archivo.cargado {
+  border: 2px solid transparent;
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.archivo.cargado span {
+  display: none;
+}
+
+.archivo.cargado img {
+  display: block;
+  animation: popIn 0.4s ease;
+}
+
+.acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+}
+
+.btn {
+  padding: 12px 22px;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.3s;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn-link {
+  background: #ff9800;
+}
+
+.btn-link:hover {
+  background: #e68900;
+}
+
+.btn-enviar {
+  background: #003f88;
+}
+
+.btn-enviar:hover {
+  background: #002d63;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* botones link */
+
+  /* 🔹 Estilos del modal (puedes ajustarlos a tu diseño actual) */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+  }
+  .modal-content {
+    background: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 500px;
+    max-width: 90%;
+  }
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .close {
+    cursor: pointer;
+    font-size: 20px;
+  }

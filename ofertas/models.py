@@ -4,6 +4,8 @@ from datetime import datetime
 from datetime import timedelta
 from django.dispatch import receiver
 from django.db.models.signals import m2m_changed
+from smart_selects.db_fields import ChainedForeignKey
+
 
 class NivelFormacion(models.Model):
     nombre = models.CharField(max_length=120)
@@ -71,17 +73,29 @@ class ProgramaFormacion(models.Model):
 class Departamento(models.Model):
     nombre= models.CharField(max_length= 255)
 
+    def __str__(self):
+        return self.nombre
+
 class Municipio(models.Model):
     nombre= models.CharField(max_length= 255)
     departamento= models.ForeignKey(Departamento, on_delete= models.PROTECT)
+
+    def __str__(self):
+        return self.nombre
 
 class Corregimientos(models.Model):
     nombre= models.CharField(max_length=255)
     municipio= models.ForeignKey(Municipio, on_delete=models.PROTECT)
 
+    def __str__(self):
+        return self.nombre
+
 class Vereda(models.Model):
     nombre= models.CharField(max_length=255)
     corregimientos= models.ForeignKey(Corregimientos, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return self.nombre
 
 
 class Ambiente(models.Model):
@@ -89,11 +103,33 @@ class Ambiente(models.Model):
     area_metros= models.IntegerField()
 
 class Lugar(models.Model):
-    departamento= models.ForeignKey(Departamento, on_delete=models.PROTECT)
-    municipio= models.ForeignKey(Municipio, on_delete=models.PROTECT)
-    corregimientos= models.ForeignKey(Corregimientos, on_delete=models.PROTECT)
-    ambiente= models.ForeignKey(Ambiente, on_delete=models.PROTECT)
-    direccion= models.CharField(max_length= 255)
+    departamento = models.ForeignKey(Departamento, on_delete=models.PROTECT)
+
+    municipio = ChainedForeignKey(
+        Municipio,
+        chained_field="departamento",          # Campo en Lugar
+        chained_model_field="departamento",    # Campo en Municipio
+        show_all=False,
+        auto_choose=True,
+        sort=True,
+        on_delete=models.PROTECT,
+    )
+
+    corregimientos = ChainedForeignKey(
+        Corregimientos,
+        chained_field="municipio",             # Campo en Lugar
+        chained_model_field="municipio",       # Campo en Corregimientos
+        show_all=False,
+        auto_choose=True,
+        sort=True,
+        on_delete=models.PROTECT,
+    )
+
+    ambiente = models.ForeignKey(Ambiente, on_delete=models.PROTECT)
+    direccion = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.direccion} ({self.municipio}, {self.departamento})"
 
 
 #Se eliminó

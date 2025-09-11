@@ -9,9 +9,11 @@
   <link rel="stylesheet" href="{% static 'fonts/fontawesome/css/all.min.css' %}" />
   <link rel="stylesheet" href="{% static 'css/variables.css' %}"/>
   <link rel="stylesheet" href="{% static 'css/home/style.css' %}" />
+  {% block css %}{% endblock %}
+
   {% if css_file %}
   <link rel="stylesheet" href="{% static css_file %}">
-  {% endif %}
+    {% endif %}
 </head>
 <body class="body">
   <aside class="sidebar">

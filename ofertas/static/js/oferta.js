@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-  /* ===== Abrir collapsible si hay campos inválidos ===== */
+
   const form = document.querySelector("#request-modal form");
   if (form) {
     form.addEventListener("submit", (e) => {
@@ -186,3 +186,45 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
  }
+
+function cargarArchivo(tipo) {
+  const div = document.getElementById(tipo);
+  div.classList.add("cargado");
+}
+
+function enviarLink() {
+  alert("📎 Se envió un link de descarga.");
+}
+
+function enviarArchivos() {
+  alert("✅ Archivos enviados correctamente.");
+}
+
+// boton link 
+
+  // Abrir y cerrar modal
+  function abrirModalLink() {
+    document.getElementById("modal-link").style.display = "block";
+  }
+
+  function cerrarModalLink() {
+    document.getElementById("modal-link").style.display = "none";
+  }
+
+  // Copiar el link al portapapeles
+  function copiarLink() {
+    let link = document.getElementById("link-generado");
+    link.select();
+    link.setSelectionRange(0, 99999); // Para móviles
+    document.execCommand("copy");
+    alert("Link copiado: " + link.value);
+  }
+
+  // Cerrar modal si se hace clic afuera
+  window.onclick = function(event) {
+    let modal = document.getElementById("modal-link");
+    if (event.target === modal) {
+      cerrarModalLink();
+    }
+  }
+
