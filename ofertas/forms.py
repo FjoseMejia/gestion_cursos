@@ -30,7 +30,7 @@ class OfertaForm(forms.ModelForm):
         widget=forms.TimeInput(attrs={'type': 'time', 'class': 'form__input'})
     )
 
-    hora_fin = forms.TimeField(
+    hora_fin= forms.TimeField(
         required=True,
         widget=forms.TimeInput(attrs={'type': 'time', 'class': 'form__input'})
     )
