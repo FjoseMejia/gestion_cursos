@@ -48,11 +48,46 @@
       </div>
     </div>
 
-    <div class="acciones">
-      <button class="btn btn-link" onclick="enviarLink()"><i class="fas fa-link"></i> Enviar Link</button>
-      <button class="btn btn-enviar" onclick="enviarArchivos()"><i class="fas fa-paper-plane"></i> Enviar</button>
+   <div class="acciones">
+  <button class="btn btn-link" onclick="abrirModalLink()">
+    <i class="fas fa-link"></i> Enviar Link
+  </button>
+  <button class="btn btn-enviar" onclick="enviarArchivos()">
+    <i class="fas fa-paper-plane"></i> Enviar
+  </button>
+</div>
+
+<!-- 🔹 Modal para Enviar Link -->
+<div id="modal-link" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title">Compartir Link</h2>
+      <span class="close" onclick="cerrarModalLink()">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="link-generado">Link de inscripción</label>
+        <div style="display: flex; gap: 10px;">
+          <input type="text" id="link-generado" value="https://tuservidor.com/inscripcion/12345" readonly class="form-control">
+          <button class="btn btn-primary" onclick="copiarLink()">Copiar</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="archivo-estudiantes">Subir estudiantes</label>
+        <input type="file" id="archivo-estudiantes" class="form-control" accept=".csv,.xlsx,.xls">
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-success">Guardar</button>
+      <button class="btn btn-danger" onclick="cerrarModalLink()">Cerrar</button>
     </div>
   </div>
+</div>
+
+
+
 <div id="request-modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
