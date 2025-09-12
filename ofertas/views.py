@@ -10,6 +10,9 @@ from .forms import OfertaForm, LugarForm
 from django.core.files import File
 import os
 from django.conf import settings
+import io
+from openpyxl import Workbook
+
 
 
 @login_required
@@ -398,3 +401,149 @@ def solicitudes (request):
             }
     )
 
+# cambio dayany
+from django.db.models import Count, Value, CharField, Case, When, Q
+
+@login_required
+def reportes(request):
+    # Agrupar por modalidad_oferta (Regular / Campesena)
+    fichas_por_modalidad = (
+        Oferta.objects
+        .annotate(
+            modalidad=Case(
+                When(modalidad_oferta__iexact="CAMPESENA", then=Value("CAMPESENA")),
+                When(modalidad_oferta__iexact="REGULAR", then=Value("REGULAR")),
+                default=Value("OTROS"),
+                output_field=CharField(),
+            )
+        )
+        .values("modalidad")
+        .annotate(total=Count("id"))
+        .order_by("modalidad")
+    )
+
+    # Contadores de arriba (basados en modalidad_oferta)
+    campesena = Oferta.objects.filter(modalidad_oferta__iexact="CAMPESENA").count()
+    regular = Oferta.objects.filter(modalidad_oferta__iexact="REGULAR").count()
+    total = Oferta.objects.count()
+
+    return render(
+        request,
+        "reportes.html",
+        {
+            "css_file": "css/reportes.css",
+            "fichas_por_modalidad": fichas_por_modalidad,
+            "campesena": campesena,
+            "regular": regular,
+            "total": total,
+        },
+    )
+
+@login_required
+def crear_reporte(request):
+    if request.method == "POST":
+        tipo = request.POST.get("tipo_programa")
+        cantidad = request.POST.get("cantidad")
+
+        if tipo and cantidad:
+            for _ in range(int(cantidad)):
+                ProgramaFormacion.objects.create(tipo_programa=tipo)
+            messages.success(request, f"Se agregaron {cantidad} registros de tipo {tipo}.")
+        else:
+            messages.error(request, "Debes seleccionar un tipo de programa y una cantidad.")
+
+    return redirect('ofertas:reportes')
+@login_required
+def exportar_a_excel(request):
+    query = Oferta.objects.all()
+    
+    filtro = request.GET.get("filtro", "todos").lower()
+    base_qs = Oferta.objects.select_related("empresa_solicitante", "estado", "usuario", "programa")
+
+    # Selección robusta según filtro
+    if filtro == "campesena":
+        query = query.filter(modalidad_oferta__iexact="CAMPESENA")
+        nombre_reporte = "reportes_campesena.xlsx"
+    elif filtro == "regular":
+        query = query.filter(modalidad_oferta__iexact="REGULAR")
+        nombre_reporte = "reportes_regular.xlsx"
+    else:
+        nombre_reporte = "reportes_todos.xlsx"
+
+    datos = query.values(
+        'codigo_de_solicitud',
+        'modalidad_oferta',
+        'tipo_oferta',
+        'entorno_geografico',
+        'cupo',
+        'ficha',
+        'fecha_inicio',
+        'fecha_terminacion',
+        'fecha_de_inscripcion',
+        'empresa_solicitante__nombre',
+        'estado__nombre',
+        'usuario__first_name',
+        'usuario__last_name',
+        'programa__nombre',
+        'programa__tipo_programa',
+    ).order_by('id')
+
+    output = io.BytesIO()
+    workbook = Workbook()
+    sheet = workbook.active
+
+    encabezados = [
+        'Código solicitud', 'Modalidad', 'Tipo', 'Entorno', 'Cupo', 'Ficha',
+        'Fecha inicio', 'Fecha terminación', 'Fecha inscripción',
+        'Empresa', 'Estado', 'Usuario Nombre', 'Usuario Apellido',
+        'Programa Nombre', 'Tipo Programa'
+    ]
+    for col_num, encabezado in enumerate(encabezados, 1):
+        sheet.cell(row=1, column=col_num, value=encabezado)
+
+    for row_num, values in enumerate(datos, 2):
+        sheet.cell(row=row_num, column=1, value=values['codigo_de_solicitud'])
+        sheet.cell(row=row_num, column=2, value=values['modalidad_oferta'])
+        sheet.cell(row=row_num, column=3, value=values['tipo_oferta'])
+        sheet.cell(row=row_num, column=4, value=values['entorno_geografico'])
+        sheet.cell(row=row_num, column=5, value=values['cupo'])
+        sheet.cell(row=row_num, column=6, value=values['ficha'])
+        sheet.cell(row=row_num, column=7, value=values['fecha_inicio'])
+        sheet.cell(row=row_num, column=8, value=values['fecha_terminacion'])
+        sheet.cell(row=row_num, column=9, value=values['fecha_de_inscripcion'])
+        sheet.cell(row=row_num, column=10, value=values['empresa_solicitante__nombre'])
+        sheet.cell(row=row_num, column=11, value=values['estado__nombre'])
+        sheet.cell(row=row_num, column=12, value=values['usuario__first_name'])
+        sheet.cell(row=row_num, column=13, value=values['usuario__last_name'])
+        sheet.cell(row=row_num, column=14, value=values['programa__nombre'])
+        sheet.cell(row=row_num, column=15, value=values['programa__tipo_programa'])
+
+    # Totales si pides "todos" (usa ambos campos)
+    row_num = query.count() + 3
+    if filtro == "todos":
+        campesena = base_qs.filter(
+            Q(programa__tipo_programa__iexact="CAMPESENA") |
+            Q(programa__nombre__icontains="campesena")
+        ).count()
+        regular = base_qs.filter(
+            Q(programa__tipo_programa__iexact="REGULAR") |
+            Q(programa__nombre__icontains="regular")
+        ).count()
+        total = base_qs.count()
+
+        sheet[f'A{row_num}'] = "Totales"
+        sheet[f'A{row_num+1}'] = "Campesena"
+        sheet[f'B{row_num+1}'] = campesena
+        sheet[f'A{row_num+2}'] = "Regular"
+        sheet[f'B{row_num+2}'] = regular
+        sheet[f'A{row_num+3}'] = "Total"
+        sheet[f'B{row_num+3}'] = total
+
+    workbook.save(output)
+    output.seek(0)
+    response = HttpResponse(
+        output.getvalue(),
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = f'attachment; filename="{nombre_reporte}"'
+    return response

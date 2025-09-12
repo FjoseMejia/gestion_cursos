@@ -5,11 +5,9 @@
 <div class="report">
     <div class="report-header">
         <h2>📊 Reporte de Fichas</h2>
-        <!-- Botón para abrir el modal -->
-        <button id="btnAgregar" class="btn-agregar">➕ Agregar Reporte</button>
+        <button id="btnAgregar" class="btn-agregar">📥 Generar Reporte</button>
     </div>
 
-    <!-- Totales -->
     <div class="totals">
         <div class="total-card">
             <h4>Total de Fichas</h4>
@@ -25,7 +23,6 @@
         </div>
     </div>
 
-    <!-- Detalle por tipo de programa -->
     <h3>📌 Detalle por tipo de programa</h3>
     <table>
         <thead>
@@ -47,49 +44,37 @@
             {% endfor %}
         </tbody>
     </table>
-    <!-- Botón para abrir el modal -->
-
-    <a href="{% url 'ofertas:exportar_a_excel' %}" class="btn-descargar">📥 Descargar Excel</a>
-
 </div>
 
 <!-- Modal -->
 <div id="modalAgregar" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
-    <h3>Agregar Nuevo Reporte</h3>
-    <form method="POST" action="{% url 'ofertas:crear_reporte' %}">
-        {% csrf_token %}
-        <label for="tipo_programa">Tipo de Programa:</label>
-        <input type="text" name="tipo_programa" id="tipo_programa" required>
-
-        <label for="cantidad">Cantidad:</label>
-        <input type="number" name="cantidad" id="cantidad" required>
-
-        <button type="submit" class="btn-agregar">Guardar</button>
+    <h3>Descargar Reporte en Excel</h3>
+    <form method="GET" action="{% url 'ofertas:exportar_a_excel' %}">
+        <label for="filtro">Seleccionar modalidad:</label>
+        <select name="filtro" id="filtro" required>
+            <option value="campesena">Campesena</option>
+            <option value="regular">Regular</option>
+            <option value="todos">Todos</option>
+        </select>
+        <br><br>
+        <button type="submit" class="btn-agregar">📥 Descargar Excel</button>
     </form>
   </div>
 </div>
 
-<!-- JS para abrir/cerrar modal -->
 <script>
     const modal = document.getElementById("modalAgregar");
     const btn = document.getElementById("btnAgregar");
     const span = document.getElementsByClassName("close")[0];
 
-    btn.onclick = function() {
-        modal.style.display = "block";
-    }
-
-    span.onclick = function() {
-        modal.style.display = "none";
-    }
-
-    window.onclick = function(event) {
+    btn.onclick = () => modal.style.display = "block";
+    span.onclick = () => modal.style.display = "none";
+    window.onclick = (event) => {
         if (event.target == modal) {
             modal.style.display = "none";
         }
     }
 </script>
-
 {% endblock %}
