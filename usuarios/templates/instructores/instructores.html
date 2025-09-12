@@ -1,0 +1,75 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+
+{% block content %}
+<div class="instructores-container">
+    <div class="hgieader">
+        <h1>{{ titulo }}</h1>
+
+<a href="{% url 'usuarios:crear_instructor' %}" class="btn-nuevo">+ Nuevo </a>
+        
+    </div>
+
+    <table class="tabla-instructores">
+        <thead>
+            <tr>
+                <th>Nombre usuario</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+                <th>CC</th>
+                <th>Teléfono</th>
+                <th>Correo</th>
+                <th>Area</th>
+                <th>Estado</th>
+                <th>Aciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for instructor in instructores %}
+            <tr>
+                <td>{{ instructor.username }}</td>
+                <td>{{ instructor.first_name }}</td>
+                <td>{{ instructor.last_name }}</td>
+                <td>{{ instructor.numero_identificacion }}</td>
+                <td>{{ instructor.telefono }}</td>
+                <td>{{ instructor.email }}</td>
+                <td>{{ instructor.area__nombre}}</td>
+                
+                
+            <td id="estado-{{ instructor.id }}">
+    {% if instructor.is_active %}
+        <span class="estado activo">Activo ✓</span>
+    {% else %}
+        <span class="estado inactivo">Inactivo ✗</span>
+    {% endif %}
+</td>
+<td class="acciones">
+
+
+    <button onclick="toggleEstado({{ instructor.id }})"
+            class="btn-accion usuarios"
+            id="btn-estado-{{ instructor.id }}"
+            title="{% if instructor.is_active %}Desactivar{% else %}Activar{% endif %}">
+        {% if instructor.is_active %}🚫{% else %}✅{% endif %}
+    </button>
+</td>
+
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="11" class="empty">No hay instructores registrados.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/instructores.css' %}">
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/instructores.js' %}"></script>
+{% endblock %}

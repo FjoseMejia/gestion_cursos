@@ -1,0 +1,143 @@
+/* Contenedor general */
+.registro-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--color-text-main);
+  padding: 2rem;
+}
+
+/* Tarjeta del formulario */
+.form {
+  max-width: 480px;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--padding-lg);
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  font-family: var(--font-main);
+  color: var(--color-text-main);
+}
+
+/* Título del formulario */
+.form__title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: var(--padding-lg);
+  text-align: center;
+  color: var(--color-text-main);
+}
+
+/* Grupo de campos */
+.form__group {
+  margin-bottom: var(--padding-base);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Etiquetas */
+.form__label {
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  color: var(--color-muted);
+  font-weight: 500;
+}
+
+/* Inputs y selects */
+.form__input,
+.form__select {
+  padding: var(--padding-base);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  background: var(--color-white);
+  transition: border 0.2s ease;
+}
+
+.form__input:focus,
+.form__select:focus {
+  border-color: var(--color-primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* Botón de enviar */
+.form__button {
+  width: 100%;
+  padding: var(--padding-base);
+  margin-top: var(--padding-base);
+  border: none;
+  border-radius: var(--radius);
+  background: var(--color-primary);
+  color: var(--color-white);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.form__button:hover {
+  background: var(--color-primary-hover);
+}
+
+/* Enlace inferior */
+.form__link {
+  display: block;
+  margin-top: var(--padding-base);
+  font-size: 0.9rem;
+  text-align: center;
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+.form__link:hover {
+  text-decoration: underline;
+}
+
+/* Estilos para mensajes del sistema */
+.messages {
+  list-style: none;
+  padding: 0;
+  margin-bottom: var(--padding-base);
+}
+
+.messages li {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.messages .success {
+  background-color: #e6ffed;
+  color: #207227;
+  border-left: 4px solid #34c759;
+}
+
+.messages .error {
+  background-color: #ffe6e6;
+  color: #a90000;
+  border-left: 4px solid #ff4d4f;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .form {
+    padding: 1.5rem;
+  }
+
+  .form__title {
+    font-size: 1.5rem;
+  }
+
+  .form__input,
+  .form__select {
+    font-size: 0.95rem;
+  }
+
+  .form__button {
+    font-size: 1rem;
+  }
+}

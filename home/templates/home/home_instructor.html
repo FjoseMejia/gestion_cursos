@@ -1,0 +1,37 @@
+{% extends 'layout.html' %}
+{% block title %}Panel del Instructor{% endblock %}
+
+{% block content %}
+<section class="summary">
+  <div class="summary__card">
+    <p class="summary__number">3</p>
+    <p class="summary__label">Ofertas activas</p>
+  </div>
+  <div class="summary__card summary__card--green">
+    <p class="summary__number">1</p>
+    <p class="summary__label">Histórico</p>
+  </div>
+</section>
+
+<section class="table">
+  <div class="table__wrapper">
+    <h2 class="table__title">Mis ofertas</h2>
+    <table class="table__content">
+      <thead class="table__head">
+        <tr>
+          <th>Nombre</th>
+          <th>Duración</th>
+          <th>Inicio</th>
+        </tr>
+      </thead>
+      <tbody class="table__body">
+        <tr>
+          <td>Programación en Python</td>
+          <td>40h</td>
+          <td>01 septiembre 2025</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,144 @@
+
+body.body {
+    font-family: var(--font-main);
+    background-color: var(--color-background);
+    margin: 0;
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    background-color: var(--color-text-main);
+    color: var(--color-white);
+    width: 240px;
+    padding: 32px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sidebar__logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.sidebar__logo-img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    margin-bottom: 8px;
+}
+
+.sidebar__role {
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.sidebar__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
+.menu-category {
+    padding: 4px 20px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #b8c2cc;
+    letter-spacing: 1px;
+}
+
+
+.sidebar__link {
+    color: var(--color-white);
+    text-decoration: none;
+    font-size: 15px;
+    padding: 3px 16px;
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.2s;
+}
+
+.sidebar__link--active,
+.sidebar__link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Dashboard */
+.dashboard {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 40px;
+}
+
+.header {
+    height: var(--header-height);
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background: var(--color-light);
+    border-radius: 20px;
+    padding: 8px 15px;
+    width: 300px;
+}
+
+.search-bar input {
+    border: none;
+    background: transparent;
+    margin-left: 10px;
+    width: 100%;
+    outline: none;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+}
+
+.user-info {
+    margin-right: 15px;
+    text-align: right;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.user-role {
+    font-size: 0.8rem;
+    color: #777;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+
+
+
