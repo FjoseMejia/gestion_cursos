@@ -1,82 +1,24 @@
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("new-request-btn").addEventListener("click", () => {
-        showModal("request-modal");
-    });
+    // Filtrado en tiempo real de la tabla de solicitudes
+    const searchInput = document.getElementById("request-search");
+    const tableBody = document.getElementById("all-requests-table-body");
 
-    function showModal(modalId) {
-      document.getElementById(modalId).style.display = "block";
-    }
+    if (searchInput && tableBody) {
+        searchInput.addEventListener("input", function () {
+            const searchText = this.value.toLowerCase();
+            const rows = tableBody.getElementsByTagName("tr");
 
-    function hideModal(modalId) {
-      document.getElementById(modalId).style.display = "none";
-    }
+            for (let row of rows) {
+                const cells = row.getElementsByTagName("td");
+                let match = false;
 
-    document.querySelectorAll(".close").forEach((closeBtn) => {
-        closeBtn.addEventListener("click", () => {
-          const modal = closeBtn.closest(".modal");
-          modal.style.display = "none";
+                for (let cell of cells) {
+                    if (cell.textContent.toLowerCase().includes(searchText)) {
+                        match = true;
+                        break;
+                    }
+                }
+
+                row.style.display = match ? "" : "none";
+            }
         });
-    });
-
-    document.getElementById("cancel-request")
-        .addEventListener("click", () => {
-          hideModal("request-modal");
-    });
-
-
-
-    //Filtrar cursos
-    const selectorDuracion = document.querySelector("#selector-duracion");
-    const selectorCursos = document.querySelector("#selector-cursos");
-
-    selectorDuracion.addEventListener('change', function() {
-        const duracion = this.value;
-
-        // limpiar cursos anteriores
-        selectorCursos.innerHTML = '<option value="">Escoge curso</option>';
-
-    if (!duracion) return;
-
-    fetch(`/ofertas/api/programas_sugeridos/?duracion=${duracion}`)
-        .then(res => res.json())
-        .then(data => {
-
-            selectorCursos.innerHTML = "";
-
-
-            data.forEach(programa => {
-                const option = document.createElement("option");
-                option.value = Number(programa.id);
-                option.textContent = programa.nombre;
-                selectorCursos.appendChild(option);
-            });
-        });
-    });
-
-    //Mostrando inputs
-    const tipoOferta = document.getElementById("id_tipo_oferta");
-
-    // Todos los campos de empresa en un array
-    const camposEmpresa = [
-        document.getElementById("id_empresa_nit"),
-        document.getElementById("id_empresa_nombre"),
-        document.getElementById("id_empresa_subsector"),
-        document.getElementById("id_archivo")
-    ];
-
-    // Función que muestra u oculta los campos
-    function actualizarCamposEmpresa() {
-        if (tipoOferta.value === "CERRADA") {
-            camposEmpresa.forEach(c => c.parentElement.style.display = "block");
-        } else {
-            camposEmpresa.forEach(c => c.parentElement.style.display = "none");
-        }
     }
-
-    // Inicializar al cargar
-    actualizarCamposEmpresa();
-
-    // Escuchar cambios en el select
-    tipoOferta.addEventListener("change", actualizarCamposEmpresa);
-
-});

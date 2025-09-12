@@ -32,9 +32,28 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody id="all-requests-table-body">
-                <!-- Content populated by JS -->
-            </tbody>
+        <tbody id="all-requests-table-body">
+            {% if solicitudes %}
+                {% for solicitud in solicitudes %}
+                    <tr>
+                        <td>{{ solicitud.programa.nombre }}</td>
+                        <td>{{ solicitud.usuario.get_full_name }}</td>
+                        <td>{{ solicitud.creado_en|date:"d/m/Y" }}</td>
+                        <td>{{ solicitud.programa }}</td>
+                        <td>{{ solicitud.estado.nombre }}</td>
+                        <td>
+                            <!-- Puedes agregar botones aquí -->
+                            {% comment %} <a href="{% url 'ofertas:detalle' solicitud.id %}" class="btn btn-primary btn-sm">Ver</a> {% endcomment %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="6">No tienes solicitudes registradas.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+
         </table>
     </div>
 </div>
