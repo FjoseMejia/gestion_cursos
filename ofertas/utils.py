@@ -5,7 +5,7 @@ from django.conf import settings
 
 def generar_ficha(oferta):
 
-    template_path = os.path.join(settings.BASE_DIR, "templates/plantillas/ficha_caracterizacion.docx")
+    template_path = os.path.join(settings.BASE_DIR, "templates/plantillas/ficha_de_caracterizacion.docx")
     doc = DocxTemplate(template_path)
 
     context = {
