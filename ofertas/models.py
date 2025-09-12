@@ -224,7 +224,7 @@ class Oferta(models.Model):
     lugar = models.CharField(max_length=255, null=True, blank=True)  # <-- cambiado a texto
     horarios = models.ManyToManyField("Horario", related_name="ofertas", blank=True)
     estado = models.ForeignKey("Estado", on_delete=models.PROTECT)
-    archivo= models.FileField(upload_to='ofertas/', default='', blank=True)
+    archivo= models.FileField(upload_to='cartas_solicitud/', default='', blank=True)
     cupo= models.IntegerField()
     empresa_solicitante = models.ForeignKey("EmpresaSolicitante", on_delete=models.PROTECT, null=True, blank=True)
     programa_especial = models.ForeignKey("ProgramaEspecial", on_delete=models.PROTECT, null=True, blank=True)

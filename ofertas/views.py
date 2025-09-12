@@ -67,7 +67,7 @@ def index(request):
             ruta= generar_ficha(oferta)
             with open(os.path.join(settings.MEDIA_ROOT, ruta), "rb") as f:
                 oferta.caracterizacion_generada.save(
-                    os.path.basename(ruta),  # nombre del archivo
+                    os.path.basename(ruta),
                     File(f),
                     save=True
                 )
