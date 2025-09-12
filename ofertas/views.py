@@ -8,10 +8,14 @@ from django.shortcuts import render, redirect
 from .models import Oferta, ProgramaFormacion, Estado, Horario, HorarioDia
 from .forms import OfertaForm, LugarForm
 
+
+
+@login_required
 def index(request):
     user = request.user
     grupo = user.groups.first()
     grupo_nombre = grupo.name if grupo else "Invitado"
+
     duraciones = ProgramaFormacion.objects.values_list(
         'duracion', flat=True
     ).distinct().order_by('duracion')
@@ -24,7 +28,7 @@ def index(request):
             oferta = form.save(commit=False)
             oferta.usuario = user
 
-            # programa
+            # Programa
             programa_id = request.POST.get('programa')
             if programa_id:
                 try:
@@ -33,7 +37,7 @@ def index(request):
                     messages.error(request, "El programa seleccionado no existe.")
                     return redirect('ofertas:index')
 
-            # estado inicial
+            # Estado inicial
             try:
                 oferta.estado = Estado.objects.get(id=1)
             except Estado.DoesNotExist:
@@ -42,20 +46,22 @@ def index(request):
 
             oferta.save()
 
-            hora_inicio = form.cleaned_data.get('hora_inicio')
-            hora_fin = form.cleaned_data.get('hora_fin')
-            dias = form.cleaned_data.get('dias')
+            # HORARIO
+            inicio = form.cleaned_data['hora_inicio']
+            fin = form.cleaned_data['hora_fin']
+            horario, _ = Horario.objects.get_or_create(hora_inicio=inicio, hora_fin=fin)
 
-            if hora_inicio and hora_fin and dias:
-                horario = Horario.objects.create(
-                    hora_inicio=hora_inicio,
-                    hora_fin=hora_fin
-                )
-                for dia in dias:
-                    hd = HorarioDia.objects.create(dia=dia, horario=horario)
-                    oferta.horario_dias.add(hd)
+            # DÍAS
+            dias_seleccionados = form.cleaned_data.get("dias")
+            if dias_seleccionados:
+                for dia in dias_seleccionados:
+                    HorarioDia.objects.get_or_create(dia=dia, horario=horario)
 
-            # generar documento
+            # Asociar horario a la oferta
+            oferta.horarios.add(horario)
+            oferta.save()
+
+            # Generar documento
             ruta = generar_ficha(oferta)
             oferta.archivo = ruta
             oferta.save()
@@ -65,26 +71,23 @@ def index(request):
         else:
             messages.error(request, "Hubo un error al enviar la solicitud. Verifica los datos.")
             print(form.errors.as_json())
-            print("ERRORES DEL FORMULARIO:")
             print(form.errors.as_data())
             print(lugar_form.errors)
     else:
         form = OfertaForm()
         lugar_form = LugarForm()
 
-    # solicitudes según rol
+    # Solicitudes según rol
     if grupo_nombre == "Funcionario":
         solicitudes = Oferta.objects.all().order_by("creado_en")
     else:
         solicitudes = Oferta.objects.filter(usuario=user).order_by("creado_en")
-
 
     return render(
         request,
         'oferta.html',
         {
             'grupo_nombre': grupo_nombre,
-
             'css_file': 'css/oferta.css',
             'js_file': 'js/oferta.js',
             'form': form,
@@ -94,9 +97,7 @@ def index(request):
         }
     )
 
-def duraciones_disponibles(request):
-    duraciones = ProgramaFormacion.objects.values_list('duracion', flat=True).distinct().order_by('duracion')
-    return JsonResponse(list(duraciones), safe=False)
+
 
 @login_required
 def editar_estado_comentario(request, oferta_id):

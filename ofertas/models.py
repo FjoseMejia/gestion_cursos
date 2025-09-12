@@ -125,7 +125,8 @@ class Lugar(models.Model):
         on_delete=models.PROTECT,
     )
 
-    ambiente = models.ForeignKey(Ambiente, on_delete=models.PROTECT)
+    ambiente = models.CharField(max_length=255)
+
     direccion = models.CharField(max_length=255)
 
     def __str__(self):
@@ -219,10 +220,10 @@ class Oferta(models.Model):
         default=EntornoGeografico.URBANO
     )
 
-    programa = models.ForeignKey("ProgramaFormacion", on_delete=models.PROTECT)
+    programa= models.ForeignKey("ProgramaFormacion", on_delete=models.PROTECT)
     modalidad_programa = models.ForeignKey("ModalidadPrograma", on_delete=models.PROTECT, blank=True, null=True)
-    lugar = models.ForeignKey("Lugar", on_delete=models.PROTECT, null=True, blank=True)
-    horario = models.ForeignKey("Horario", on_delete=models.PROTECT, null=True, blank=True)
+    lugar = models.CharField(max_length=255, null=True, blank=True)  # <-- cambiado a texto
+    horarios = models.ManyToManyField("Horario", related_name="ofertas", blank=True)
     estado = models.ForeignKey("Estado", on_delete=models.PROTECT)
     archivo = models.FileField(upload_to='ofertas/', default='', blank=True)
     cupo = models.IntegerField()
@@ -235,7 +236,7 @@ class Oferta(models.Model):
     fecha_de_inscripcion = models.DateField(null=True, blank=True)
     caracterizacion_generada = models.FileField(upload_to="ficha_caracterizacion/", blank=True, null=True)
 
-    horario_dias = models.ManyToManyField("HorarioDia", blank=True)
+    horario_dias = models.ManyToManyField(HorarioDia)
 
     def __str__(self):
         return f"Oferta {self.codigo_de_solicitud} - {self.tipo_oferta}"
@@ -243,7 +244,6 @@ class Oferta(models.Model):
     def calcular_fecha_terminacion(self):
         if not self.fecha_inicio or not self.programa or not self.horario_dias.exists():
             return None
-
 
         horas_semana = sum([
             hd.horario.duracion().total_seconds() / 3600
@@ -253,16 +253,14 @@ class Oferta(models.Model):
         if horas_semana <= 0:
             return None
 
-        # semanas necesarias (ceil con división entera hacia arriba)
         semanas = -(-self.programa.duracion // horas_semana)
-
         return self.fecha_inicio + timedelta(weeks=semanas)
 
     def save(self, *args, **kwargs):
-        # aquí NO usamos horario_dias porque aún no está guardado en el primer save
         if self.fecha_inicio and self.programa and not self.pk:
             self.fecha_terminacion = None
         super().save(*args, **kwargs)
+
 
 @receiver(m2m_changed, sender=Oferta.horario_dias.through)
 def actualizar_fecha_terminacion(sender, instance, action, **kwargs):
