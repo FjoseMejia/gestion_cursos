@@ -151,47 +151,48 @@
 
                     <!-- Horario -->
                     <div class="collapsible">
-                        <div class="collapsible-header">
-                            Horario <span class="arrow">▶</span>
-                        </div>
-                        <div class="collapsible-body">
-                            <div class="form-inline">
-                                <div class="form-group">
-                                    <label>{{ form.dias.label }}</label>
-                                    <div class="dias-grid">
-                                        {% for checkbox in form.dias %}
-                                            <label class="dia-item">
-                                                {{ checkbox.tag }}
-                                                <span>{{ checkbox.choice_label }}</span>
-                                            </label>
-                                        {% endfor %}
-                                    </div>
-                                    {% for error in form.dias.errors %}
-                                        <div class="form-error">{{ error }}</div>
-                                    {% endfor %}
-                                </div>
-
-                                <div class="form-inline horas-container">
-    <div class="form-group">
-        {{ form.hora_inicio.label_tag }}
-        {{ form.hora_inicio }}
-        {% for error in form.hora_inicio.errors %}
-            <div class="form-error">{{ error }}</div>
-        {% endfor %}
+    <div class="collapsible-header">
+        Horario <span class="arrow">▶</span>
     </div>
+    <div class="collapsible-body">
 
-    <div class="form-group">
-        {{ form.hora_fin.label_tag }}
-        {{ form.hora_fin }}
-        {% for error in form.hora_fin.errors %}
-            <div class="form-error">{{ error }}</div>
-        {% endfor %}
+        <!-- Checkboxes de días (desde OfertaForm) -->
+        <div class="form-group">
+            <label>{{ form.dias.label }}</label>
+            <div class="dias-grid">
+                {% for checkbox in form.dias %}
+                    <label class="dia-item">
+                        {{ checkbox.tag }}
+                        <span>{{ checkbox.choice_label }}</span>
+                    </label>
+                {% endfor %}
+            </div>
+            {% for error in form.dias.errors %}
+                <div class="form-error">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Hora inicio -->
+        <div class="form-group">
+            {{ form.hora_inicio.label_tag }}
+            {{ form.hora_inicio }}
+            {% for error in form.hora_inicio.errors %}
+                <div class="form-error">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Hora fin -->
+        <div class="form-group">
+            {{ form.hora_fin.label_tag }}
+            {{ form.hora_fin }}
+            {% for error in form.hora_fin.errors %}
+                <div class="form-error">{{ error }}</div>
+            {% endfor %}
+        </div>
+
     </div>
 </div>
 
-                            </div>
-                        </div>
-                    </div>
 
                     <!-- Ubicación -->
                     <div class="collapsible">
@@ -242,7 +243,7 @@
                             <div class="form-group">
                                 <label for="selector-duracion">Duración</label>
                                 <select id="selector-duracion" name="duracion">
-                                    <option value="">-- Escoge duración --</option>
+                                    <option value="">Escoge duración</option>
                                     {% for d in duraciones %}
                                         <option value="{{ d }}">{{ d }}</option>
                                     {% endfor %}

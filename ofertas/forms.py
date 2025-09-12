@@ -3,19 +3,15 @@ from datetime import date
 from django import forms
 
 
+
 class LugarForm(forms.ModelForm):
     class Meta:
         model = Lugar
         fields = ["departamento", "municipio", "corregimientos", "direccion", "ambiente"]
         widgets = {
-            "direccion": forms.TextInput(
-                attrs={"placeholder": "Ej: Calle 12 #3-47", "class": "form__input"}
-            ),
-            "ambiente": forms.TextInput(
-                attrs={"placeholder": "Ej: Ambiente 301", "class": "form__input"}
-            ),
+            "direccion": forms.TextInput(attrs={"placeholder": "Ej: Calle 12 #3-47"}),
+            "ambiente": forms.TextInput(attrs={"placeholder": "Ej: Ambiente 201"}),
         }
-
 
 class OfertaForm(forms.ModelForm):
     # Ubicación
@@ -56,18 +52,12 @@ class OfertaForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class': 'form__input', 'placeholder': 'Subsector económico'})
     )
 
-    programa= forms.ModelChoiceField(
-        queryset=ProgramaFormacion.objects.all(),
-        required=True,
-        label="Curso",
-        widget=forms.Select(attrs={'id': 'selector-cursos', 'class': 'form__input'})
-    )
 
     class Meta:
         model = Oferta
         fields = [
             'modalidad_oferta', 'tipo_oferta', 'entorno_geografico',
-            'programa', 'cupo', 'empresa_solicitante',
+            'cupo', 'empresa_solicitante',
             'programa_especial',
             'fecha_inicio', 'fecha_de_inscripcion', 'fecha_terminacion', 'archivo',
         ]
