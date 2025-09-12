@@ -1,10 +1,11 @@
 {% extends 'layout.html' %}
 {% block title %}Gestión de Ofertas{% endblock %}
+{% load static %}
 
 {% block content %}
 <div id="requests-view" class="view-container">
     <div class="page-title">
-        <h1>Gestiona tus solicitudes</h1>
+        <h1>Gestiona tus Ofertas</h1>
         <button class="btn btn-primary" id="new-request-btn">
             <i class="fas fa-plus"></i> Nueva Oferta
         </button>
@@ -20,202 +21,402 @@
 
     <div class="card">
         <div class="card-header">
-            <div class="card-title">Todas las Solicitudes</div>
+            <div class="card-title">Todas las Ofertas</div>
             <div class="search-bar">
                 <i class="fas fa-search"></i>
                 <input type="text" placeholder="Buscar solicitud..." id="request-search"/>
             </div>
         </div>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Programa</th>
-                    <th>Fecha de creación</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                    <th>Generar link</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for solicitud in solicitudes %}
-                <tr>
-                    <td>{{ solicitud.programa.nombre }}</td>
-                    <td>{{ solicitud.creado_en|date:"Y-m-d H:i" }}</td>
-                    <td>{{ solicitud.estado.nombre }}</td>
-                    <td>
-
-                    </td>
-                    <td>
-                        <a href="{% url 'inscripciones:detalle_inscripcion' solicitud.id %}" target="_blank">🔗 Ir a inscripción</a>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="5">No has enviado solicitudes</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-<div id="request-modal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2 class="modal-title">Nueva Solicitud</h2>
-            <span class="close">&times;</span>
-        </div>
-        <div class="modal-body">
-            <form class="custom-form" method="POST" action="{% url 'ofertas:index' %}" enctype="multipart/form-data">
-                {% csrf_token %}
-
-                <!-- Datos de la oferta -->
-                <div class="collapsible">
-                    <div class="collapsible-header">
-                        Oferta <span class="arrow">▶</span>
-                    </div>
-                    <div class="collapsible-body">
-                        <div class="form-group">
-                            {{ form.tipo_oferta.label_tag }}
-                            {{ form.tipo_oferta }}
-                            {% for error in form.tipo_oferta.errors %}
-                                <div class="form-error">{{ error }}</div>
-                            {% endfor %}
+{% comment %} inicio accordion {% endcomment %}
+        {% comment %} acordeón simple funcional {% endcomment %}
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" 
+                            type="button" 
+                            data-bs-toggle="collapse" 
+                            data-bs-target="#collapseOne" 
+                            aria-expanded="true" 
+                            aria-controls="collapseOne">
+                        3071104 - ANALISIS Y DESARROLLO DE SISTEMAS DE SOFWARE
+                    </button>
+                </h2>
+                <div id="collapseOne" 
+                    class="accordion-collapse collapse show" 
+                    aria-labelledby="headingOne" 
+                    data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <div class="archivos d-flex justify-content-center gap-3 mb-3">
+                            <div class="archivo text-center" onclick="cargarArchivo('word')">
+                                <i class="fas fa-file-word fa-3x" style="color:#2b579a;"></i>
+                                <div class="mt-2">
+                                    <small>Ficha de caracterización</small>
+                                </div>
+                            </div>
+                            <div class="archivo text-center" onclick="cargarArchivo('excel')">
+                                <i class="fas fa-file-excel fa-3x" style="color:#217346;"></i>
+                                <div class="mt-2">
+                                    <small>Masivo aprendices</small>
+                                </div>
+                            </div>
+                            <div class="archivo text-center" onclick="cargarArchivo('pdf')">
+                                <i class="fas fa-file-pdf fa-3x" style="color:#d93025;"></i>
+                                <div class="mt-2">
+                                    <small>Identificaciones</small>
+                                </div>
+                            </div>
                         </div>
-
-                        <div class="form-group">
-                            {{ form.modalidad_oferta.label_tag }}
-                            {{ form.modalidad_oferta }}
-                            {% for error in form.modalidad_oferta.errors %}
-                                <div class="form-error">{{ error }}</div>
-                            {% endfor %}
-                        </div>
-
-                        <div class="form-group">
-                            {{ form.entorno_geografico.label_tag }}
-                            {{ form.entorno_geografico }}
-                            {% for error in form.entorno_geografico.errors %}
-                                <div class="form-error">{{ error }}</div>
-                            {% endfor %}
-                        </div>
-
-                        <div class="form-group">
-                            {{ form.programa_especial.label_tag }}
-                            {{ form.programa_especial }}
-                            {% for error in form.programa_especial.errors %}
-                                <div class="form-error">{{ error }}</div>
-                            {% endfor %}
-                        </div>
-
-                        <div class="form-group">
-                            {{ form.fecha_inicio.label_tag }}
-                            {{ form.fecha_inicio }}
-                        </div>
-
-                        <div class="form-group">
-                            {{ form.fecha_de_inscripcion.label_tag }}
-                            {{ form.fecha_de_inscripcion }}
+                        
+                        <div class="acciones text-center">
+                            <button class="btn btn-outline-primary me-2" onclick="abrirModalLink()">
+                                <i class="fas fa-link"></i> Enviar Link
+                            </button>
+                            <button class="btn btn-primary" onclick="enviarArchivos()">
+                                <i class="fas fa-paper-plane"></i> Enviar
+                            </button>
                         </div>
                     </div>
                 </div>
-
-                <!-- Horario -->
-                <div class="collapsible">
-                    <div class="collapsible-header">
-                        Horario <span class="arrow">▶</span>
+            </div>
+            
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" 
+                            type="button" 
+                            data-bs-toggle="collapse" 
+                            data-bs-target="#collapseTwo" 
+                            aria-expanded="false" 
+                            aria-controls="collapseTwo">
+                        Accordion Item #2
+                    </button>
+                </h2>
+                <div id="collapseTwo" 
+                    class="accordion-collapse collapse" 
+                    aria-labelledby="headingTwo" 
+                    data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <div class="archivos d-flex justify-content-center gap-3 mb-3">
+                            <div class="archivo text-center" onclick="cargarArchivo('word2')">
+                                <i class="fas fa-file-word fa-3x" style="color:#2b579a;"></i>
+                                <div class="mt-2">
+                                    <small>Ficha de caracterización</small>
+                                </div>
+                            </div>
+                            <div class="archivo text-center" onclick="cargarArchivo('excel2')">
+                                <i class="fas fa-file-excel fa-3x" style="color:#217346;"></i>
+                                <div class="mt-2">
+                                    <small>Masivo aprendices</small>
+                                </div>
+                            </div>
+                            <div class="archivo text-center" onclick="cargarArchivo('pdf2')">
+                                <i class="fas fa-file-pdf fa-3x" style="color:#d93025;"></i>
+                                <div class="mt-2">
+                                    <small>Identificaciones</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="acciones text-center">
+                            <button class="btn btn-outline-primary me-2" onclick="abrirModalLink()">
+                                <i class="fas fa-link"></i> Enviar Link
+                            </button>
+                            <button class="btn btn-primary" onclick="enviarArchivos()">
+                                <i class="fas fa-paper-plane"></i> Enviar
+                            </button>
+                        </div>
                     </div>
-                    <div class="collapsible-body">
-                        <div class="form-inline">
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed" 
+                            type="button" 
+                            data-bs-toggle="collapse" 
+                            data-bs-target="#collapseThree" 
+                            aria-expanded="false" 
+                            aria-controls="collapseThree">
+                        Accordion Item #3
+                    </button>
+                </h2>
+                <div id="collapseThree" 
+                    class="accordion-collapse collapse" 
+                    aria-labelledby="headingThree" 
+                    data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <div class="archivos d-flex justify-content-center gap-3 mb-3">
+                            <div class="archivo text-center" onclick="cargarArchivo('word3')">
+                                <i class="fas fa-file-word fa-3x" style="color:#2b579a;"></i>
+                                <div class="mt-2">
+                                    <small>Ficha de caracterización</small>
+                                </div>
+                            </div>
+                            <div class="archivo text-center" onclick="cargarArchivo('excel3')">
+                                <i class="fas fa-file-excel fa-3x" style="color:#217346;"></i>
+                                <div class="mt-2">
+                                    <small>Masivo aprendices</small>
+                                </div>
+                            </div>
+                            <div class="archivo text-center" onclick="cargarArchivo('pdf3')">
+                                <i class="fas fa-file-pdf fa-3x" style="color:#d93025;"></i>
+                                <div class="mt-2">
+                                    <small>Identificaciones</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="acciones text-center">
+                            <button class="btn btn-outline-primary me-2" onclick="abrirModalLink()">
+                                <i class="fas fa-link"></i> Enviar Link
+                            </button>
+                            <button class="btn btn-primary" onclick="enviarArchivos()">
+                                <i class="fas fa-paper-plane"></i> Enviar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        {% comment %} fin accordion {% endcomment %}
+
+        {% comment %} <div class="archivos">
+            <div class="archivo" id="word" onclick="cargarArchivo('word')">
+                <i class="fas fa-file-word fa-3x" style="color:#2b579a;"></i>
+                <span>Ficha de caracterización</span>
+                <img src="{% static 'img/icons/word.png' %}" alt="Word">
+            </div>
+
+            <div class="archivo" id="excel" onclick="cargarArchivo('excel')">
+                <i class="fas fa-file-excel fa-3x" style="color:#217346;"></i>
+                <span>Masivo aprendices</span>
+                <img src="{% static 'img/icons/excel.png' %}" alt="Excel">
+            </div>
+
+            <div class="archivo" id="pdf" onclick="cargarArchivo('pdf')">
+                <i class="fas fa-file-pdf fa-3x" style="color:#d93025;"></i>
+                <span>Identificaciones</span>
+                <img src="{% static 'img/icons/pdf.png' %}" alt="PDF">
+            </div>
+        </div> {% endcomment %}
+
+        {% comment %} botones link y modal {% endcomment %}
+    {% comment %} <div class="acciones">
+        <button class="btn btn-link" onclick="abrirModalLink()">
+            <i class="fas fa-link"></i> Enviar Link
+        </button>
+        <button class="btn btn-enviar" onclick="enviarArchivos()">
+            <i class="fas fa-paper-plane"></i> Enviar
+        </button>
+    </div> {% endcomment %}
+
+<!-- 🔹 Modal para Enviar Link -->
+<div id="modal-link" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title">Compartir Link</h2>
+      <span class="close" onclick="cerrarModalLink()">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="link-generado">Link de inscripción</label>
+        <div style="display: flex; gap: 10px;">
+          <input type="text" id="link-generado" value="https://tuservidor.com/inscripcion/12345" readonly class="form-control">
+          <button class="btn btn-primary" onclick="copiarLink()">Copiar</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="archivo-estudiantes">Subir estudiantes</label>
+        <input type="file" id="archivo-estudiantes" class="form-control" accept=".csv,.xlsx,.xls">
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-success">Guardar</button>
+      <button class="btn btn-danger" onclick="cerrarModalLink()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+    <div id="request-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Nueva Oferta</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form class="custom-form" method="POST" action="{% url 'ofertas:index' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.media }}
+                    {{ lugar_form.media }}
+
+                    <!-- Datos de la oferta -->
+                    <div class="collapsible">
+                        <div class="collapsible-header">
+                            Oferta <span class="arrow">▶</span>
+                        </div>
+                        <div class="collapsible-body">
                             <div class="form-group">
-                              <label>{{ form.dias.label }}</label>
-                              <div class="dias-grid">
-                                {% for checkbox in form.dias %}
-                                  <label class="dia-item">
-                                    {{ checkbox.tag }}
-                                    <span>{{ checkbox.choice_label }}</span>
-                                  </label>
+                                {{ form.tipo_oferta.label_tag }}
+                                {{ form.tipo_oferta }}
+                                {% for error in form.tipo_oferta.errors %}
+                                    <div class="form-error">{{ error }}</div>
                                 {% endfor %}
-                              </div>
-                              {% for error in form.dias.errors %}
-                                <div class="form-error">{{ error }}</div>
-                              {% endfor %}
                             </div>
 
-                            {{ form.hora_inicio }}
-                            {{ form.hora_fin }}
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Ubicación -->
-                <div class="collapsible">
-                    <div class="collapsible-header">
-                        Ubicación <span class="arrow">▶</span>
-                    </div>
-                    <div class="collapsible-body">
-                        {{ lugar_form.departamento }}
-                        {{ lugar_form.municipio }}
-                        {{ lugar_form.corregimientos }}
-                        {{ lugar_form.ambiente }}
-                        {{ lugar_form.direccion }}
-                    </div>
-                </div>
-
-                <!-- Empresa -->
-                <div class="collapsible ocultar">
-                    <div class="collapsible-header">
-                        Empresa <span class="arrow">▶</span>
-                    </div>
-                    <div class="collapsible-body">
-                        <div class="form-group">
-                            {{ form.empresa_nombre.label_tag }}
-                            {{ form.empresa_nombre }}
-                        </div>
-                        <div class="form-group">
-                            {{ form.empresa_nit.label_tag }}
-                            {{ form.empresa_nit }}
-                        </div>
-                        <div class="form-group">
-                            {{ form.empresa_subsector.label_tag }}
-                            {{ form.empresa_subsector }}
-                        </div>
-                        <div class="form-group">
-                            {{ form.archivo.label_tag }}
-                            {{ form.archivo }}
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Programa -->
-                <div class="collapsible">
-                    <div class="collapsible-header">
-                        Programa <span class="arrow">▶</span>
-                    </div>
-                    <div class="collapsible-body">
-                        {{ form.cupo }}
-                        <div class="form-group">
-                            <label for="selector-duracion">Duración</label>
-                            <select id="selector-duracion" name="duracion">
-                                <option value="">-- Escoge duración --</option>
-                                {% for d in duraciones %}
-                                    <option value="{{ d }}">{{ d }}</option>
+                            <div class="form-group">
+                                {{ form.modalidad_oferta.label_tag }}
+                                {{ form.modalidad_oferta }}
+                                {% for error in form.modalidad_oferta.errors %}
+                                    <div class="form-error">{{ error }}</div>
                                 {% endfor %}
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="selector-cursos">Curso</label>
-                            <select id="selector-cursos" name="programa">
-                                <option value="">Escoge curso</option>
-                            </select>
+                            </div>
+
+                            <div class="form-group">
+                                {{ form.entorno_geografico.label_tag }}
+                                {{ form.entorno_geografico }}
+                                {% for error in form.entorno_geografico.errors %}
+                                    <div class="form-error">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form.programa_especial.label_tag }}
+                                {{ form.programa_especial }}
+                                {% for error in form.programa_especial.errors %}
+                                    <div class="form-error">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form.fecha_inicio.label_tag }}
+                                {{ form.fecha_inicio }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form.fecha_de_inscripcion.label_tag }}
+                                {{ form.fecha_de_inscripcion }}
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success" id="submit-request">Enviar Solicitud</button>
-                    <button type="button" class="btn btn-danger" id="cancel-request">Cancelar</button>
-                </div>
-            </form>
+                    <!-- Horario -->
+                    <div class="collapsible">
+    <div class="collapsible-header">
+        Horario <span class="arrow">▶</span>
+    </div>
+    <div class="collapsible-body">
+
+        <!-- Checkboxes de días (desde OfertaForm) -->
+        <div class="form-group">
+            <label>{{ form.dias.label }}</label>
+            <div class="dias-grid">
+                {% for checkbox in form.dias %}
+                    <label class="dia-item">
+                        {{ checkbox.tag }}
+                        <span>{{ checkbox.choice_label }}</span>
+                    </label>
+                {% endfor %}
+            </div>
+            {% for error in form.dias.errors %}
+                <div class="form-error">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Hora inicio -->
+        <div class="form-group">
+            {{ form.hora_inicio.label_tag }}
+            {{ form.hora_inicio }}
+            {% for error in form.hora_inicio.errors %}
+                <div class="form-error">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Hora fin -->
+        <div class="form-group">
+            {{ form.hora_fin.label_tag }}
+            {{ form.hora_fin }}
+            {% for error in form.hora_fin.errors %}
+                <div class="form-error">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+    </div>
+</div>
+
+
+                    <!-- Ubicación -->
+                    <div class="collapsible">
+                        <div class="collapsible-header">
+                            Ubicación <span class="arrow">▶</span>
+                        </div>
+                        <div class="collapsible-body">
+                            {{ lugar_form.departamento }}
+                            {{ lugar_form.municipio }}
+                            {{ lugar_form.corregimientos }}
+                            {{ lugar_form.ambiente }}
+                            {{ lugar_form.direccion }}
+                        </div>
+                    </div>
+
+                    <!-- Empresa -->
+                    <div class="collapsible ocultar">
+                        <div class="collapsible-header">
+                            Empresa <span class="arrow">▶</span>
+                        </div>
+                        <div class="collapsible-body">
+                            <div class="form-group">
+                                {{ form.empresa_nombre.label_tag }}
+                                {{ form.empresa_nombre }}
+                            </div>
+                            <div class="form-group">
+                                {{ form.empresa_nit.label_tag }}
+                                {{ form.empresa_nit }}
+                            </div>
+                            <div class="form-group">
+                                {{ form.empresa_subsector.label_tag }}
+                                {{ form.empresa_subsector }}
+                            </div>
+                            <div class="form-group">
+                                {{ form.archivo.label_tag }}
+                                {{ form.archivo }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Programa -->
+                    <div class="collapsible">
+                        <div class="collapsible-header">
+                            Programa <span class="arrow">▶</span>
+                        </div>
+                        <div class="collapsible-body">
+                            {{ form.cupo }}
+                            <div class="form-group">
+                                <label for="selector-duracion">Duración</label>
+                                <select id="selector-duracion" name="duracion">
+                                    <option value="">Escoge duración</option>
+                                    {% for d in duraciones %}
+                                        <option value="{{ d }}">{{ d }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="selector-cursos">Curso</label>
+                                <select id="selector-cursos" name="programa">
+                                    <option value="">Escoge curso</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success" id="submit-request">Enviar Solicitud</button>
+                        <button type="button" class="btn btn-danger" id="cancel-request">Cancelar</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

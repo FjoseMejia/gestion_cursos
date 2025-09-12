@@ -4,6 +4,8 @@ from datetime import datetime
 from datetime import timedelta
 from django.dispatch import receiver
 from django.db.models.signals import m2m_changed
+from smart_selects.db_fields import ChainedForeignKey
+
 
 class NivelFormacion(models.Model):
     nombre = models.CharField(max_length=120)
@@ -71,17 +73,29 @@ class ProgramaFormacion(models.Model):
 class Departamento(models.Model):
     nombre= models.CharField(max_length= 255)
 
+    def __str__(self):
+        return self.nombre
+
 class Municipio(models.Model):
     nombre= models.CharField(max_length= 255)
     departamento= models.ForeignKey(Departamento, on_delete= models.PROTECT)
+
+    def __str__(self):
+        return self.nombre
 
 class Corregimientos(models.Model):
     nombre= models.CharField(max_length=255)
     municipio= models.ForeignKey(Municipio, on_delete=models.PROTECT)
 
+    def __str__(self):
+        return self.nombre
+
 class Vereda(models.Model):
     nombre= models.CharField(max_length=255)
     corregimientos= models.ForeignKey(Corregimientos, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return self.nombre
 
 
 class Ambiente(models.Model):
@@ -89,12 +103,34 @@ class Ambiente(models.Model):
     area_metros= models.IntegerField()
 
 class Lugar(models.Model):
-    departamento= models.ForeignKey(Departamento, on_delete=models.PROTECT)
-    municipio= models.ForeignKey(Municipio, on_delete=models.PROTECT)
-    corregimientos= models.ForeignKey(Corregimientos, on_delete=models.PROTECT)
-    ambiente= models.ForeignKey(Ambiente, on_delete=models.PROTECT)
-    direccion= models.CharField(max_length= 255)
+    departamento = models.ForeignKey(Departamento, on_delete=models.PROTECT)
 
+    municipio = ChainedForeignKey(
+        Municipio,
+        chained_field="departamento",          # Campo en Lugar
+        chained_model_field="departamento",    # Campo en Municipio
+        show_all=False,
+        auto_choose=True,
+        sort=True,
+        on_delete=models.PROTECT,
+    )
+
+    corregimientos = ChainedForeignKey(
+        Corregimientos,
+        chained_field="municipio",             # Campo en Lugar
+        chained_model_field="municipio",       # Campo en Corregimientos
+        show_all=False,
+        auto_choose=True,
+        sort=True,
+        on_delete=models.PROTECT,
+    )
+
+    ambiente = models.CharField(max_length=255)
+
+    direccion = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.direccion} ({self.municipio}, {self.departamento})"
 
 #Se eliminó
 class Jornada(models.Model):
@@ -183,13 +219,13 @@ class Oferta(models.Model):
         default=EntornoGeografico.URBANO
     )
 
-    programa = models.ForeignKey("ProgramaFormacion", on_delete=models.PROTECT)
+    programa= models.ForeignKey("ProgramaFormacion", on_delete=models.PROTECT)
     modalidad_programa = models.ForeignKey("ModalidadPrograma", on_delete=models.PROTECT, blank=True, null=True)
-    lugar = models.ForeignKey("Lugar", on_delete=models.PROTECT, null=True, blank=True)
-    horario = models.ForeignKey("Horario", on_delete=models.PROTECT, null=True, blank=True)
+    lugar = models.CharField(max_length=255, null=True, blank=True)  # <-- cambiado a texto
+    horarios = models.ManyToManyField("Horario", related_name="ofertas", blank=True)
     estado = models.ForeignKey("Estado", on_delete=models.PROTECT)
-    archivo = models.FileField(upload_to='ofertas/', default='', blank=True)
-    cupo = models.IntegerField()
+    archivo= models.FileField(upload_to='cartas_solicitud/', default='', blank=True)
+    cupo= models.IntegerField()
     empresa_solicitante = models.ForeignKey("EmpresaSolicitante", on_delete=models.PROTECT, null=True, blank=True)
     programa_especial = models.ForeignKey("ProgramaEspecial", on_delete=models.PROTECT, null=True, blank=True)
     ficha = models.CharField(max_length=255, null=True, blank=True)
@@ -197,9 +233,9 @@ class Oferta(models.Model):
     fecha_inicio = models.DateField()
     fecha_terminacion = models.DateField(null=True, blank=True)
     fecha_de_inscripcion = models.DateField(null=True, blank=True)
-    caracterizacion_generada = models.FileField(upload_to="ficha_caracterizacion/", blank=True, null=True)
+    caracterizacion_generada= models.FileField(upload_to="ficha_caracterizacion/", blank=True, null=True)
 
-    horario_dias = models.ManyToManyField("HorarioDia", blank=True)
+    horario_dias = models.ManyToManyField(HorarioDia)
 
     def __str__(self):
         return f"Oferta {self.codigo_de_solicitud} - {self.tipo_oferta}"
@@ -207,7 +243,6 @@ class Oferta(models.Model):
     def calcular_fecha_terminacion(self):
         if not self.fecha_inicio or not self.programa or not self.horario_dias.exists():
             return None
-
 
         horas_semana = sum([
             hd.horario.duracion().total_seconds() / 3600
@@ -217,16 +252,14 @@ class Oferta(models.Model):
         if horas_semana <= 0:
             return None
 
-        # semanas necesarias (ceil con división entera hacia arriba)
         semanas = -(-self.programa.duracion // horas_semana)
-
         return self.fecha_inicio + timedelta(weeks=semanas)
 
     def save(self, *args, **kwargs):
-        # aquí NO usamos horario_dias porque aún no está guardado en el primer save
         if self.fecha_inicio and self.programa and not self.pk:
             self.fecha_terminacion = None
         super().save(*args, **kwargs)
+
 
 @receiver(m2m_changed, sender=Oferta.horario_dias.through)
 def actualizar_fecha_terminacion(sender, instance, action, **kwargs):

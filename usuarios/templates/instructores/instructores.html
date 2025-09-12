@@ -4,9 +4,10 @@
 
 {% block content %}
 <div class="instructores-container">
-    <div class="header">
-        <h1>Listado de Instructores</h1>
-        <button class="btn-nuevo">+ Nuevo Instructor</button>
+    <div class="hgieader">
+        <h1>{{ titulo }}</h1>
+
+<a href="{% url 'usuarios:crear_instructor' %}" class="btn-nuevo">+ Nuevo </a>
         
     </div>
 
@@ -19,6 +20,7 @@
                 <th>CC</th>
                 <th>Teléfono</th>
                 <th>Correo</th>
+                <th>Area</th>
                 <th>Estado</th>
                 <th>Aciones</th>
             </tr>
@@ -32,20 +34,27 @@
                 <td>{{ instructor.numero_identificacion }}</td>
                 <td>{{ instructor.telefono }}</td>
                 <td>{{ instructor.email }}</td>
-                <td>{{ instructor.area}}</td>
+                <td>{{ instructor.area__nombre}}</td>
                 
                 
-                <td>
-                    {% if instructor.estado %}
-                        <span class="estado activo">Activo ✓</span>
-                    {% else %}
-                        <span class="estado inactivo">Inactivo ✗</span>
-                    {% endif %}
-                </td>
-                <td class="acciones">
-                    <button class="btn-accion editar" title="Editar">✎</button>
-                    <button class="btn-accion usuarios" title="Activar">👥</button>
-                </td>
+            <td id="estado-{{ instructor.id }}">
+    {% if instructor.is_active %}
+        <span class="estado activo">Activo ✓</span>
+    {% else %}
+        <span class="estado inactivo">Inactivo ✗</span>
+    {% endif %}
+</td>
+<td class="acciones">
+
+
+    <button onclick="toggleEstado({{ instructor.id }})"
+            class="btn-accion usuarios"
+            id="btn-estado-{{ instructor.id }}"
+            title="{% if instructor.is_active %}Desactivar{% else %}Activar{% endif %}">
+        {% if instructor.is_active %}🚫{% else %}✅{% endif %}
+    </button>
+</td>
+
             </tr>
             {% empty %}
             <tr>

@@ -12,6 +12,5 @@ urlpatterns= [
     path('api/programas_sugeridos/', views.programas_sugeridos, name='programas_sugeridos'),
     path('cambiar-estado/<int:oferta_id>/<str:accion>/', views.cambiar_estado, name='cambiar_estado'),
 
-
 ]
 
