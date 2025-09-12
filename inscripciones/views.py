@@ -134,7 +134,10 @@ def index(request):
     return render(request, 'index.html', {
         'form': form,
         'mensaje_cupos': mensaje_cupos,
-        'total_inscritos': total_inscritos
+        'total_inscritos': total_inscritos,
+        'css_file': 'css/formulario.css',
+        
+        # 'js_file': 'solicitudes/js/solicitudes.js',
     })
 
 from django.contrib import messages

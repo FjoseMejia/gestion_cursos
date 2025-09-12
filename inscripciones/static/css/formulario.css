@@ -1,0 +1,86 @@
+/* Contenedor principal */
+.container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fdfdfd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Títulos */
+.container h1, .container h3 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+/* Párrafos */
+.container p {
+    color: #555;
+    margin-bottom: 20px;
+}
+
+/* Tabla del formulario */
+form table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+form table tr {
+    margin-bottom: 15px;
+}
+
+form table td {
+    padding: 10px;
+    vertical-align: top;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="number"],
+form select,
+form textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Botón de envío */
+button[type="submit"] {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #2980b9;
+}
+
+/* Alertas */
+.alert {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    border: 1px solid #f5c6cb;
+}
+
+/* Enlaces de descarga */
+a {
+    color: #2c3e50;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}
