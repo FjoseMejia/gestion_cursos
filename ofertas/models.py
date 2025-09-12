@@ -132,7 +132,6 @@ class Lugar(models.Model):
     def __str__(self):
         return f"{self.direccion} ({self.municipio}, {self.departamento})"
 
-
 #Se eliminó
 class Jornada(models.Model):
     nombre = models.CharField(max_length=80)
@@ -225,8 +224,8 @@ class Oferta(models.Model):
     lugar = models.CharField(max_length=255, null=True, blank=True)  # <-- cambiado a texto
     horarios = models.ManyToManyField("Horario", related_name="ofertas", blank=True)
     estado = models.ForeignKey("Estado", on_delete=models.PROTECT)
-    archivo = models.FileField(upload_to='ofertas/', default='', blank=True)
-    cupo = models.IntegerField()
+    archivo= models.FileField(upload_to='ofertas/', default='', blank=True)
+    cupo= models.IntegerField()
     empresa_solicitante = models.ForeignKey("EmpresaSolicitante", on_delete=models.PROTECT, null=True, blank=True)
     programa_especial = models.ForeignKey("ProgramaEspecial", on_delete=models.PROTECT, null=True, blank=True)
     ficha = models.CharField(max_length=255, null=True, blank=True)
@@ -234,7 +233,7 @@ class Oferta(models.Model):
     fecha_inicio = models.DateField()
     fecha_terminacion = models.DateField(null=True, blank=True)
     fecha_de_inscripcion = models.DateField(null=True, blank=True)
-    caracterizacion_generada = models.FileField(upload_to="ficha_caracterizacion/", blank=True, null=True)
+    caracterizacion_generada= models.FileField(upload_to="ficha_caracterizacion/", blank=True, null=True)
 
     horario_dias = models.ManyToManyField(HorarioDia)
 

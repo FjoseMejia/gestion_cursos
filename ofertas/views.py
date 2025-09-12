@@ -7,7 +7,9 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from .models import Oferta, ProgramaFormacion, Estado, Horario, HorarioDia
 from .forms import OfertaForm, LugarForm
-
+from django.core.files import File
+import os
+from django.conf import settings
 
 
 @login_required
@@ -21,8 +23,8 @@ def index(request):
     ).distinct().order_by('duracion')
 
     if request.method == "POST":
-        form = OfertaForm(request.POST, request.FILES)
-        lugar_form = LugarForm(request.POST)
+        form= OfertaForm(request.POST, request.FILES)
+        lugar_form= LugarForm(request.POST)
 
         if form.is_valid() and lugar_form.is_valid():
             oferta = form.save(commit=False)
@@ -62,8 +64,14 @@ def index(request):
             oferta.save()
 
             # Generar documento
-            ruta = generar_ficha(oferta)
-            oferta.archivo = ruta
+            ruta= generar_ficha(oferta)
+            with open(os.path.join(settings.MEDIA_ROOT, ruta), "rb") as f:
+                oferta.caracterizacion_generada.save(
+                    os.path.basename(ruta),  # nombre del archivo
+                    File(f),
+                    save=True
+                )
+
             oferta.save()
 
             messages.success(request, "Solicitud creada y documento generado.")

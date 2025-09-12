@@ -35,13 +35,14 @@ def generar_ficha(oferta):
 
     doc.render(context)
 
+    filename = f"ficha_de_caracterizacion_{oferta.id}.docx"
     output_dir = os.path.join(settings.MEDIA_ROOT, "ficha_caracterizacion")
     os.makedirs(output_dir, exist_ok=True)
-    output_path = os.path.join(output_dir, f"ficha_caracterizacion_{oferta.id}.docx")
+    output_path = os.path.join(output_dir, filename)
 
     doc.save(output_path)
 
-    return f"solicitudes/ficha_caracterizacion_{oferta.id}.docx"
+    return f"ficha_caracterizacion/{filename}"
 
 def safe_attr(obj, attr, default=""):
     if obj is None:
