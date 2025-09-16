@@ -342,50 +342,6 @@ def exportar_a_excel(request):
 
     return response
 
-    """Genera y descarga un archivo de Excel con los datos de todas las inscripciones."""
-    datos =Oferta.objects.select_related(oferta__nombre="CAMPESENA").values('modalidad_oferta', 'tipo_oferta', 'entorno_geografico', 'cupo', 'subsector', 'convenio', 'ficha', 'codigo_de_solicitud', 'fecha_icinio', 'fecha_terminacion', 'fecha_inscripcion', ).order_by('id')
-
-    output = io.BytesIO()
-    workbook = Workbook()
-    sheet = workbook.active
-
-    # Define los encabezados de las columnas
-    sheet['A1'] = 'id'
-    sheet['B1'] = 'nombre'
-    # sheet['C1'] = 'instructor'
-    # sheet['D1'] = 'modalidad '
-    # sheet['E1'] = 'Código de la Ficha'
-    # sheet['F1'] = 'fehca de inicio'
-    # sheet['G1'] = 'fecha de fin'
- 
-
-    # Ancho de las columnas para que se vean bien
-    sheet.column_dimensions['A'].width = 25
-    sheet.column_dimensions['B'].width = 25
-    # sheet.column_dimensions['C'].width = 25
-    # sheet.column_dimensions['D'].width = 20
-    # sheet.column_dimensions['E'].width = 30
-    # sheet.column_dimensions['F'].width = 20
-    # sheet.column_dimensions['G'].width = 20
-
-    # Llena los datos en las filas correspondientes
-    row_num = 2
-    for values in datos:
-        sheet[f'A{row_num}'] = values.id
-        sheet[f'B{row_num}'] = values.nombre
-        # sheet[f'E{row_num}'] = ModalidadOferta.tipo_poblacion_aspirante
-        row_num += 1
-
-    workbook.save(output)
-    output.seek(0)
-
-    response = HttpResponse(
-        output.getvalue(),
-        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    )
-    response['Content-Disposition'] = 'attachment; filename="inscripciones.xlsx"'
-
-    return response
 
 def solicitudes (request):
     return render(
