@@ -10,6 +10,8 @@ from .forms import OfertaForm, LugarForm
 from django.core.files import File
 import os
 from django.conf import settings
+from .models import Oferta
+
 
 
 @login_required
@@ -396,5 +398,15 @@ def solicitudes (request):
                 'css_file': 'solicitudes/css/solicitudes.css',
                 'js_file': 'solicitudes/js/solicitudes.js',
             }
-    )
+        )
+
+def ofertas_view(request):
+    ofertas = Oferta.objects.prefetch_related('archivos').all()
+    return render(
+        request, 
+        'tu_template.html', {
+            'ofertas': ofertas
+            }
+        )
+
 

@@ -28,8 +28,39 @@
             </div>
         </div>
 {% comment %} inicio accordion {% endcomment %}
+
+<div class="accordion" id="accordionExample">
+    {% for oferta in solicitudes %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapse{{ forloop.counter }}"
+                        aria-expanded="{{ forloop.first|yesno:'true,false' }}"
+                        aria-controls="collapse{{ forloop.counter }}">
+                    {{ oferta.codigo_de_solicitud }} - {{ oferta.programa.nombre }}
+                </button>
+            </h2>
+            <div id="collapse{{ forloop.counter }}"
+                class="accordion-collapse collapse {% if forloop.first %}show{% endif %}"
+                aria-labelledby="heading{{ forloop.counter }}"
+                data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <!-- Aquí va el contenido de cada oferta -->
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+
+
+
+
+
         {% comment %} acordeón simple funcional {% endcomment %}
-        <div class="accordion" id="accordionExample">
+        {% comment %} <div class="accordion" id="accordionExample">
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingOne">
                     <button class="accordion-button" 
@@ -176,68 +207,40 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> {% endcomment %}
 
 
         {% comment %} fin accordion {% endcomment %}
 
-        {% comment %} <div class="archivos">
-            <div class="archivo" id="word" onclick="cargarArchivo('word')">
-                <i class="fas fa-file-word fa-3x" style="color:#2b579a;"></i>
-                <span>Ficha de caracterización</span>
-                <img src="{% static 'img/icons/word.png' %}" alt="Word">
-            </div>
 
-            <div class="archivo" id="excel" onclick="cargarArchivo('excel')">
-                <i class="fas fa-file-excel fa-3x" style="color:#217346;"></i>
-                <span>Masivo aprendices</span>
-                <img src="{% static 'img/icons/excel.png' %}" alt="Excel">
-            </div>
-
-            <div class="archivo" id="pdf" onclick="cargarArchivo('pdf')">
-                <i class="fas fa-file-pdf fa-3x" style="color:#d93025;"></i>
-                <span>Identificaciones</span>
-                <img src="{% static 'img/icons/pdf.png' %}" alt="PDF">
-            </div>
-        </div> {% endcomment %}
-
-        {% comment %} botones link y modal {% endcomment %}
-    {% comment %} <div class="acciones">
-        <button class="btn btn-link" onclick="abrirModalLink()">
-            <i class="fas fa-link"></i> Enviar Link
-        </button>
-        <button class="btn btn-enviar" onclick="enviarArchivos()">
-            <i class="fas fa-paper-plane"></i> Enviar
-        </button>
-    </div> {% endcomment %}
 
 <!-- 🔹 Modal para Enviar Link -->
 <div id="modal-link" class="modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2 class="modal-title">Compartir Link</h2>
-      <span class="close" onclick="cerrarModalLink()">&times;</span>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label for="link-generado">Link de inscripción</label>
-        <div style="display: flex; gap: 10px;">
-          <input type="text" id="link-generado" value="https://tuservidor.com/inscripcion/12345" readonly class="form-control">
-          <button class="btn btn-primary" onclick="copiarLink()">Copiar</button>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Compartir Link</h2>
+            <span class="close" onclick="cerrarModalLink()">&times;</span>
+            </div>
+            <div class="modal-body">
+            <div class="form-group">
+                <label for="link-generado">Link de inscripción</label>
+                <div style="display: flex; gap: 10px;">
+                <input type="text" id="link-generado" value="https://tuservidor.com/inscripcion/12345" readonly class="form-control">
+                <button class="btn btn-primary" onclick="copiarLink()">Copiar</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="archivo-estudiantes">Subir estudiantes</label>
+                <input type="file" id="archivo-estudiantes" class="form-control" accept=".csv,.xlsx,.xls">
+            </div>
+            </div>
+
+            <div class="modal-footer">
+            <button class="btn btn-success">Guardar</button>
+            <button class="btn btn-danger" onclick="cerrarModalLink()">Cerrar</button>
         </div>
-      </div>
-
-      <div class="form-group">
-        <label for="archivo-estudiantes">Subir estudiantes</label>
-        <input type="file" id="archivo-estudiantes" class="form-control" accept=".csv,.xlsx,.xls">
-      </div>
     </div>
-
-    <div class="modal-footer">
-      <button class="btn btn-success">Guardar</button>
-      <button class="btn btn-danger" onclick="cerrarModalLink()">Cerrar</button>
-    </div>
-  </div>
 </div>
 
     <div id="request-modal" class="modal">
